@@ -47,11 +47,7 @@ const { localize, auth, production, layout, tenants } = environment;
     {
       provide: ProfileDialogService,
       useClass: UserProfileDialogService
-    },
-    // {
-    //   provide: AuthModuleConfig,
-    //   useValue: auth
-    // }
+    }
   ],
   bootstrap: [AppComponent]
 })
