@@ -1,0 +1,40 @@
+:host{ 
+    .toolbar-spacer {
+        flex: 1 1 auto;
+    }
+    
+    .nav-link{
+        display: flex;
+        margin-right: .5em;
+    }
+
+    .mat-sidenav-container {
+        display: flex;
+        flex-direction: row;
+        .mat-drawer-side {
+            position: relative;
+            flex: 0 auto;
+        }
+        .mat-drawer-over {
+            position: fixed;
+        }
+        .mat-sidenav-content {
+            flex: 1;
+            height: auto;
+        }
+    }
+    
+    .container{
+        display: flex;
+        flex-direction: column;
+        .mat-toolbar{
+            flex: 0 0 auto;
+        }
+        .mat-sidenav-container{
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: row;
+            
+        }
+    }
+}

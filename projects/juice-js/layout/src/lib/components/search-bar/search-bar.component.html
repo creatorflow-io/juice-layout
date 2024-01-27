@@ -1,0 +1,6 @@
+<div @enableTrigger *ngIf="isEnabled()" class="search-container">
+    <input type="search" [(ngModel)] ="searchText"
+    (keyup)="onSearchTextChange($event)" placeholder="Search">
+    <mat-icon *ngIf="searchText" (click)="searchText='';onSearchTextChange($event)" color="primary">
+        close</mat-icon>
+</div>

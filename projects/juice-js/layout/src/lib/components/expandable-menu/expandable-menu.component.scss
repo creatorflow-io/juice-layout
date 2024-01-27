@@ -1,0 +1,21 @@
+:host ::ng-deep {
+    .mat-expansion-panel-header{
+        padding: 0;
+        .mdc-list-item{
+            padding: 0;
+        }
+        .mat-expansion-indicator{
+            position: absolute;
+            right: 0;
+            padding: 16px;
+        }
+    }
+
+    .mat-expansion-panel-body{
+        padding: 0;
+    }
+
+    .mat-content.mat-content-hide-toggle{
+        margin-right: 0;
+    }
+}

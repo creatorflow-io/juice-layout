@@ -2,6 +2,26 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@juice-js/auth": [
+        "dist/juice-js/auth"
+      ],
+      "@juice-js/core": [
+        "dist/juice-js/core"
+      ],
+      "@juice-js/layout": [
+        "dist/juice-js/layout"
+      ],
+      "@juice-js/localize": [
+        "dist/juice-js/localize"
+      ],
+      "@juice-js/tenant": [
+        "dist/juice-js/tenant"
+      ],
+      "@juice/tenant": [
+        "dist/juice/tenant"
+      ]
+    },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

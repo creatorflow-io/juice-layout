@@ -1,0 +1,16 @@
+<mat-expansion-panel [expanded]="router.isActive(item.routerLink, false)" [hideToggle]="!isExpanded" [ngClass]="router.isActive(item.routerLink, false)?'active':''">
+    <mat-expansion-panel-header >
+        <mat-list-item routerLink="{{ item.routerLink }}" [routerLinkActive]="['active']" 
+            [routerLinkActiveOptions]="{exact: true}">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle *ngIf="isExpanded" style="margin-left: 4px;"> {{ item.label }}</span>
+        </mat-list-item>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+        <mat-list-item routerLink="{{ subitem.routerLink }}" [routerLinkActive]="['active']"
+             [routerLinkActiveOptions]="{exact: true}" *ngFor=" let subitem of item.children ">
+            <mat-icon matListItemIcon>{{ subitem.icon }}</mat-icon>
+            <span matListItemTitle *ngIf="isExpanded" style="margin-left: 4px;"> {{ subitem.label }}</span>
+        </mat-list-item>
+    </mat-nav-list>
+</mat-expansion-panel>

@@ -1,0 +1,22 @@
+<mat-nav-list class="menu-scroll" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+    <ng-container *ngFor="let item of items">
+        <mat-list-item *ngIf="!item.children || item.children.length==0" 
+            routerLink="{{ item.routerLink }}" [routerLinkActive]="['active']" 
+            [routerLinkActiveOptions]="{exact:true}">
+            <mat-icon matListItemIcon color="accent">{{ item.icon }}</mat-icon>
+            <span matListItemTitle  style="margin-left: 4px;"> {{ item.label }}</span>
+        </mat-list-item>
+        <juice-expandable-menu *ngIf="item.children && item.children.length>0" 
+            [item]="item" [isExpanded]="isExpanded"></juice-expandable-menu>
+    </ng-container>
+</mat-nav-list>
+<mat-divider></mat-divider>
+<mat-action-list class="list-horizontal bottom-menu">
+    <a mat-list-item *ngIf="settingUrl" [href]="settingUrl"
+        matTooltip="{{'Settings' | translate}}" matTooltipPosition="right" [matTooltipDisabled]="isExpanded">
+        <mat-icon>settings</mat-icon>
+    </a>
+    <button mat-list-item (click)="toggle()" *ngIf="!isMobile">
+        <mat-icon [style.transform]= "isExpanded ? 'rotate(-180deg)':'rotate(0)'">double_arrow</mat-icon>
+    </button>
+</mat-action-list>

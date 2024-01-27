@@ -1,0 +1,47 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<div class="container" [class.mobile]="isMobile">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" [style.height]="toolbarHeight()">
+      <button *ngIf="isMobile" mat-icon-button (click)="toggleSidenav()" class="m-r">
+        <mat-icon aria-hidden="false" fontIcon="menu"></mat-icon>
+      </button>
+      <a *ngIf="!isMobile" [routerLink]="['/',service.tenantIdentifier]" class="nav-link home">
+          <img height="40 " alt="{{service.brandName()}} Logo " [src]="service.brandLogo() " class="p-r " />
+      </a>
+      <span *ngIf="!isMobile">{{service.brandName()}}</span>
+      <juice-search-bar></juice-search-bar>
+      <span class="toolbar-spacer "></span>
+      <juice-dark-mode></juice-dark-mode>
+      <juice-user-profile></juice-user-profile>
+  </mat-toolbar>
+
+  <mat-sidenav-container>
+      <mat-sidenav [opened]="isSnavOpenned" (closed)="isSnavOpenned = false" #snav 
+        (navigate)="hideSidenavOnMobile" (click)="hideSidenavOnMobile" (swipeRight)="hideSidenavOnMobile"
+        [mode]="isMobile ? 'over': 'side' " 
+        [@menuTransition]=" menu.isExpanded ? 'expand' : 'collapsed' " [fixedInViewport]="true" 
+        [style.top]="isMobile ? toolbarHeight():0">
+          <juice-nav-menu #menu [class.menu-expanded]="isSnavOpenned" 
+          [class.menu-collapsed]="!isSnavOpenned"></juice-nav-menu>
+      </mat-sidenav>
+
+      <mat-sidenav-content style="margin-left: 0;">
+          <router-outlet (activate)="onAttach"></router-outlet>
+      </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * End of Placeholder * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->

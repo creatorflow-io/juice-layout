@@ -1,0 +1,28 @@
+{
+  "name": "@juice-js/localize",
+  "version": "1.0.0",
+  "description": "Localize your Angular app with remote translations",
+  "author": "jack@creatorflow.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creatorflow-io/juice-layout/issues"
+  },
+  "homepage": "https://github.com/creatorflow-io/juice-layout#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creatorflow-io/juice-layout.git"
+  },
+  "peerDependencies": {
+    "@angular/common": "^16.2.12",
+    "@angular/core": "^16.2.12",
+    "@ngx-translate/core": "^14.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

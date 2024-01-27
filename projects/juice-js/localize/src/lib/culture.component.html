@@ -1,0 +1,5 @@
+<mat-select [style.width.px]="180" [style.margin-left.px]="40" [(ngModel)]="culture" (ngModelChange)="changeCulture()">
+    <mat-option *ngFor="let culture of Cultures" [value]="culture.key">
+      {{culture.displayName}}
+    </mat-option>
+</mat-select>

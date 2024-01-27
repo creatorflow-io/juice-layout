@@ -1,0 +1,60 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+
+@use '@angular/material' as mat;
+@use '../../../dist/juice-js/layout/styles/theming' as layout;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$app-primary: mat.define-palette(mat.$indigo-palette);
+$app-primary-light: mat.define-palette(mat.$indigo-palette, A200);
+$app-accent: mat.define-palette(mat.$pink-palette);
+$app-warn: mat.define-palette(mat.$red-palette);
+
+// Define a light theme
+$light-theme: mat.define-light-theme((
+  color: (
+    primary: $app-primary-light,
+    accent: $app-accent,
+    warn: $app-warn,
+  ),
+   // Only include `typography` and `density` in the default theme.
+   typography: mat.define-typography-config(),
+   density: -1//'minimum', // -1 -2 -3
+));
+$dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $app-primary,
+    accent: $app-accent,
+    warn: $app-warn,
+  )
+));
+
+@include mat.all-component-themes($light-theme);
+@include layout.layout-component-themes($light-theme);
+
+.dark {
+  // Define a dark theme
+  @include mat.all-component-colors($dark-theme);
+  @include layout.layout-component-colors($dark-theme);
+}
+
+.mat-primary {
+  color: map-get($app-primary, 700);
+}
+
+.mat-accent {
+  color: map-get($app-accent, 700);
+}
+.density-compact {
+    @include mat.all-component-densities(-2);
+}

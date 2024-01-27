@@ -1,0 +1,44 @@
+{
+    "git.ignoreLimitWarning": true,
+    "restoreTerminals.terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "core",
+                    "commands": ["npm run watch:core"],
+                    "cwd": "${workspaceFolder}"
+                },
+                {
+                    "name": "localize",
+                    "commands": ["Start-Sleep 10", "npm run watch:localize"],
+                    "cwd": "${workspaceFolder}"
+                },
+                {
+                    "name": "layout",
+                    "commands": ["Start-Sleep 15", "npm run watch:layout"],
+                    "cwd": "${workspaceFolder}"
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "auth",
+                    "commands": ["Start-Sleep 20", "npm run watch:auth"],
+                    "cwd": "${workspaceFolder}"
+                },
+                {
+                    "name": "tenant",
+                    "commands": ["Start-Sleep 20", "npm run watch:tenant"],
+                    "cwd": "${workspaceFolder}"
+                },
+                {
+                    "name": "serve",
+                    "commands": ["Start-Sleep 25", "ng serve --port 4201 --ssl"],
+                    "cwd": "${workspaceFolder}"
+                }
+            ],
+        }
+    ],
+    "restoreTerminals.keepExistingTerminalsOpen": false,
+}
