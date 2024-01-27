@@ -31,5 +31,5 @@ jobs:
       - run: npx semantic-release --plugins=@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/npm --pkgRoot=./dist/juice-js/core
       - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/localize
       - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/layout --localPackages=@juice-js/core,@juice-js/localize --debug
-      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/auth --localPackages=@juice-js/core,@juice-js/localize,@juice-js/layout --debug
-      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/tenant --localPackages=@juice-js/core,@juice-js/localize,@juice-js/layout --debug
+      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/auth --localPackages=@juice-js/layout --debug
+      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/tenant --localPackages=@juice-js/layout --debug

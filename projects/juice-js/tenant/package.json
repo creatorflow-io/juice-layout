@@ -1,6 +1,21 @@
 {
   "name": "@juice-js/tenant",
   "version": "1.0.0",
+  "description": "Tenant authorization",
+  "author": "jack@creatorflow.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creatorflow-io/juice-layout/issues"
+  },
+  "homepage": "https://github.com/creatorflow-io/juice-layout#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creatorflow-io/juice-layout.git"
+  },
   "peerDependencies": {
     "@juice-js/layout": "^1.0.0"
   },

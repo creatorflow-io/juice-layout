@@ -1,6 +1,21 @@
 {
   "name": "@juice-js/core",
   "version": "1.0.0",
+  "description": "Provides a set of core services for building web applications (menu, tenant etc).",
+  "author": "jack@creatorflow.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creatorflow-io/juice-layout/issues"
+  },
+  "homepage": "https://github.com/creatorflow-io/juice-layout#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creatorflow-io/juice-layout.git"
+  },
   "peerDependencies": {
 
   },

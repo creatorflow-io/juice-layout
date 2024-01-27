@@ -1,6 +1,21 @@
 {
   "name": "@juice-js/auth",
   "version": "1.0.0",
+  "description": "Provides authentication and authorization for applications.",
+  "author": "jack@creatorflow.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creatorflow-io/juice-layout/issues"
+  },
+  "homepage": "https://github.com/creatorflow-io/juice-layout#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creatorflow-io/juice-layout.git"
+  },
   "peerDependencies": {
     "@juce-js/layout": "^1.0.0"
   },
