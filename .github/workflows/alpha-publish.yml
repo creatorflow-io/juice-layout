@@ -1,0 +1,35 @@
+name: Publish alpha package to npmjs
+on:
+  push:
+    branches: [ alpha, beta ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+      packages: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm ci
+      - run: npm run build @juice-js/core --if-present
+      - run: npm run build @juice-js/localize --if-present
+      - run: npm run build @juice-js/layout --if-present
+      - run: npm run build @juice-js/auth --if-present
+      - run: npm run build @juice-js/tenant --if-present
+      - run: npm test -- --watch=false --browsers=ChromeHeadless
+      - run: npx semantic-release --plugins=@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/npm --pkgRoot=./dist/juice-js/core
+      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/localize
+      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/layout --localPackages=@juice-js/core,@juice-js/localize --debug
+      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/auth --localPackages=@juice-js/core,@juice-js/localize,@juice-js/layout --debug
+      - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/tenant --localPackages=@juice-js/core,@juice-js/localize,@juice-js/layout --debug
