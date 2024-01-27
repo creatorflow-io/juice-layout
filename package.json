@@ -49,6 +49,6 @@
     "ng-packagr": "^16.0.0",
     "typescript": "~5.1.3",
     "semantic-release": "^22.0.5",
-    "@juice-js/semantic-release-npm": "2.0.2"
+    "@juice-js/semantic-release-npm": "2.0.3-next.1"
   }
 }
