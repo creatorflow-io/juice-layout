@@ -11,7 +11,12 @@
     "watch:auth": "ng build --watch --configuration development --project @juice-js/auth",
     "watch:tenant": "ng build --watch --configuration development --project @juice-js/tenant",
     "watch:core": "ng build --watch --configuration development --project @juice-js/core",
-    "test": "ng test"
+    "test:core": "ng test --project @juice-js/core",
+    "test:localize": "ng test --project @juice-js/localize",
+    "test:layout": "ng test --project @juice-js/layout",
+    "test:auth": "ng test --project @juice-js/auth",
+    "test:tenant": "ng test --project @juice-js/tenant",
+    "test": "ng test --watch=false --browsers=ChromeHeadless --code-coverage"
   },
   "private": true,
   "dependencies": {

@@ -2,10 +2,6 @@
   "name": "@juice-js/auth",
   "version": "1.0.0",
   "peerDependencies": {
-    "@angular/common": "^16.2.0",
-    "@angular/core": "^16.2.0",
-    "angular-oauth2-oidc": "^15.0.1",
-    "@ngx-translate/core": "^14.0.0",
     "@juce-js/layout": "^1.0.0"
   },
   "dependencies": {
