@@ -17,16 +17,11 @@
     "url": "https://github.com/creatorflow-io/juice-layout.git"
   },
   "peerDependencies": {
-    "@angular/common": "^16.2.12",
-    "@angular/core": "^16.2.12",
-    "@angular/material": "15.2.9",
-    "angular-oauth2-oidc": "^15.0.1",
-    "@ngx-translate/core": "^14.0.0",
+    "tslib": "^2.3.0",
     "@juice-js/core": "^1.0.0",
     "@juice-js/localize": "^1.0.0"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
   },
   "sideEffects": false,
   "exports":{

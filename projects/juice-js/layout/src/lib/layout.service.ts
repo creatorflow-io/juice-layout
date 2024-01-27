@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { LayoutConfig, ThemeMode } from './layout.config';
 import { TenantInfo, TenantService } from '@juice-js/core';
 
@@ -12,14 +12,16 @@ export class LayoutService {
   tenantIdentifier: string = "";
 
   private _tenant: TenantInfo|null = null;
+  private _options: LayoutConfig;
   
-  constructor(private options: LayoutConfig, 
-    private tenantService: TenantService
+  constructor(@Optional() options: LayoutConfig, 
+    tenantService: TenantService
     ) {
     tenantService?.getTenantInfo().then(tenantInfo => {
       this.tenantIdentifier = tenantInfo?.identifier ??"";
       this._tenant = tenantInfo;
     });
+    this._options = options ?? new LayoutConfig();
   }
 
   public getThemeMode(): ThemeMode {
@@ -27,7 +29,7 @@ export class LayoutService {
     if(mode){
       return JSON.parse(mode);
     }
-    return this.options.defaultThemeMode;
+    return this._options.defaultThemeMode;
   }
   public toggleDarkMode(){
     var state = this.getThemeMode();
@@ -46,7 +48,7 @@ export class LayoutService {
     if(isMenuOpen){
       return JSON.parse(isMenuOpen);
     }
-    return this.options.defaultMenuOpen;
+    return this._options.defaultMenuOpen;
   }
 
   public toggleMenu(){
@@ -55,22 +57,22 @@ export class LayoutService {
   }
 
   public favicon(): string {
-    return this._tenant?.favicon ?? this.options.favicon;
+    return this._tenant?.favicon ?? this._options.favicon;
   }
 
   public brandName(): string {
-    return this._tenant?.name ?? this.options.brand;
+    return this._tenant?.name ?? this._options.brand;
   }
 
   public brandLogo(): string {
-    return this._tenant?.logo ?? this.options.brandLogo;
+    return this._tenant?.logo ?? this._options.brandLogo;
   }
 
   public settingUrl(): string | undefined{
-    return this.options.settingUrl;
+    return this._options.settingUrl;
   }
 
   public userImageUrl(username: string): string{
-    return this.options.userImageUrl ? this.options.userImageUrl.replace("{username}", username) : "";
+    return this._options.userImageUrl ? this._options.userImageUrl.replace("{username}", username) : "";
   }
 }

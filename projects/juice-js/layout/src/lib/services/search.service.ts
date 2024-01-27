@@ -8,7 +8,7 @@ export class SearchService{
     isEnabled: boolean = false;
     private _callback: Function | undefined = undefined;
 
-    constructor(private router: Router){
+    constructor(router: Router){
         router.events.subscribe((event) => {
             if(event instanceof NavigationStart){
                 this.disable();

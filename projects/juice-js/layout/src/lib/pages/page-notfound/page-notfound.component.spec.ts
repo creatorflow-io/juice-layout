@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { PageNotfoundComponent } from './page-notfound.component';
 
 describe('PageNotfoundComponent', () => {
@@ -8,7 +8,10 @@ describe('PageNotfoundComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PageNotfoundComponent]
+      declarations: [PageNotfoundComponent],
+      imports: [
+        TranslateModule.forRoot()
+      ]
     });
     fixture = TestBed.createComponent(PageNotfoundComponent);
     component = fixture.componentInstance;

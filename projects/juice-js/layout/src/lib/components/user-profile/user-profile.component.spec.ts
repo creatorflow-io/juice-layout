@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { UserProfileComponent } from './user-profile.component';
 
 describe('UserProfileComponent', () => {
@@ -8,7 +10,11 @@ describe('UserProfileComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UserProfileComponent]
+      declarations: [UserProfileComponent],
+      imports: [
+        OAuthModule.forRoot(),
+        HttpClientTestingModule,
+      ]
     });
     fixture = TestBed.createComponent(UserProfileComponent);
     component = fixture.componentInstance;
