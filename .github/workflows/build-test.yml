@@ -31,7 +31,7 @@ jobs:
       - run: npm run build @juice-js/layout --if-present
       - run: npm run build @juice-js/auth --if-present
       - run: npm run build @juice-js/tenant --if-present
-      - run: npm test -- --watch=false --browsers=ChromeHeadless
+      - run: npm test
         env:
           CI: true
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

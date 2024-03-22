@@ -27,7 +27,7 @@ jobs:
       - run: npm run build @juice-js/layout --if-present
       - run: npm run build @juice-js/auth --if-present
       - run: npm run build @juice-js/tenant --if-present
-      - run: npm test -- --watch=false --browsers=ChromeHeadless
+      - run: npm test
       - run: npx semantic-release --plugins=@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/npm --pkgRoot=./dist/juice-js/core
       - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/localize --debug
       - run: npx @juice-js/semantic-release-npm --pkgRoot=./dist/juice-js/layout --localPackages=@juice-js/core,@juice-js/localize --debug
