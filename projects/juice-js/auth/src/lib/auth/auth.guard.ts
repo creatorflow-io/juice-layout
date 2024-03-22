@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Optional} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {from} from "rxjs";
 import {map} from "rxjs/operators";
 import { AuthModuleConfig } from './auth-module.config';
+import { TenantService } from '@juice-js/core';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,19 @@ import { AuthModuleConfig } from './auth-module.config';
 export class AuthGuard  {
   path: string;
   constructor(private router: Router, private oauthService: OAuthService,
-    private options: AuthModuleConfig) {
+    private options: AuthModuleConfig, @Optional() private tenantService: TenantService){
       this.path = new URL(this.options.basePath).pathname;
+      if(tenantService){
+        var identifier = '/' + tenantService.currentTenant?.identifier??'';
+        this.path = this.path.replace('/:tenant', identifier);
+      }
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.hasValidToken()) {
+      if(!this.hasValidTenant()){
+        return this.router.createUrlTree([`${this.path}/login`], {queryParams: {returnUrl: state.url}});
+      }
       if(this.hasValidRole(route)){
         return true;
       }
@@ -52,5 +60,20 @@ export class AuthGuard  {
 
   private hasValidToken() {
     return this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken();
+  }
+
+  private hasValidTenant(){
+    if(!this.tenantService){
+      return true;
+    }
+    const claims = this.oauthService.getIdentityClaims();
+    var tenant = this.tenantService?.currentTenant?.identifier;
+    var issuer = claims['iss'];
+    return !tenant || this.getTenantFromIssuer(issuer) === tenant;
+  }
+
+  private getTenantFromIssuer(issuer: string){
+    var match = issuer.match(/\/([^\/]+)\/?$/);
+    return match?.[1];
   }
 }

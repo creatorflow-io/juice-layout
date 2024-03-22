@@ -10,6 +10,12 @@ export class ConfigResolver extends TenantResolverService{
     }
 
     getTenantByIdentifier(identifier: string): Observable<TenantInfo|null> {
+        if(identifier===''){
+            return new Observable(subscriber => {
+                subscriber.next({identifier:''} as TenantInfo);
+                subscriber.complete();
+            });
+        }
         const tenant = this.config.find(tenant => tenant.identifier === identifier);
         if(tenant){
             return new Observable(subscriber => {

@@ -12,7 +12,7 @@ export class UserProfileComponent {
   imageUrl: string = "";
 
   constructor(@Optional() private dialogService: ProfileDialogService,
-    private layoutService: LayoutService,
+    layoutService: LayoutService,
     private oauthService: OAuthService) {
     if(this.hasValidToken()){
       const claims = this.oauthService.getIdentityClaims();
