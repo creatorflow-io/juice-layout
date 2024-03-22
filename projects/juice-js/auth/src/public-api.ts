@@ -4,5 +4,6 @@
 
 export * from './lib/auth.module';
 export * from './lib/auth/auth.guard';
+export * from './lib/auth/auth.interceptor';
 export * from './lib/auth/auth-module.config';
 export * from './lib/auth/auth-routing.module';

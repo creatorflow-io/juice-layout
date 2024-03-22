@@ -4,7 +4,7 @@ import { ProfileDialogService } from '@juice-js/layout';
 import { UserProfileComponent } from './user-profile.component';
 
 @Injectable()
-export class UserProfileDialogService extends ProfileDialogService {
+export class CustomUserProfileDialogService extends ProfileDialogService {
     constructor(matDialog: MatDialog) {
         super(matDialog);
     }

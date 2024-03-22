@@ -6,18 +6,18 @@ export const environment = {
         appName: "testapp",
     },
     auth: {
-        issuer: 'https://localhost:44310',
-        redirectUri: 'https://localhost:4201/auth/login-completed',
-        postLogoutRedirectUri: 'https://localhost:4201/auth/logout-completed',
+        issuer: 'https://host.docker.internal:44316/:tenant',
+        redirectUri: 'https://localhost:4201/:tenant/auth/login-completed',
+        postLogoutRedirectUri: 'https://localhost:4201/:tenant/auth/logout-completed',
         clientId: 'spa_demo',
         responseType: 'code',
-        scope: 'openid profile roles offline_access localize_api',
+        scope: 'openid profile roles tenants-api',
         basePath : 'https://localhost:4201/:tenant/auth',
     },
     layout:{
         brand: "cfio",
         defaultMenuOpen: true,
-        userImageUrl: "https://localhost:44310/Account/Auth/ProfileImage?username={username}"
+        userImageUrl: "https://host.docker.internal:44316/Account/Auth/ProfileImage?username={username}"
     },
     tenants: [
         {
@@ -25,7 +25,7 @@ export const environment = {
             name: "Acme",
         },
         {
-            identifier: "cfio",
+            identifier: "initech",
             name: "CFIO",
         }
     ]

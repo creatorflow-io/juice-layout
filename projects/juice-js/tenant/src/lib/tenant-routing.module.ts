@@ -5,7 +5,7 @@ import { PageComponent } from '@juice-js/layout';
 
 const routes: Routes = [
   {
-    path: 'tenant-mismatch',
+    path: ':tenant/tenant-mismatch',
     component: PageComponent, 
     children:[
       {path: '', component: TenantMismatchComponent}

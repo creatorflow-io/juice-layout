@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { TranslateModule, MissingTranslationHandler } from '@ngx-translate/core';
 
 import { LoginComponent } from './pages/login/login.component';
@@ -11,6 +11,8 @@ import { AuthModuleConfig } from './auth/auth-module.config';
 
 import { SubmitMissingTranslationHandler } from '@juice-js/localize';
 import { AuthConfig } from 'angular-oauth2-oidc';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TenantService } from '@juice-js/core';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { AuthConfig } from 'angular-oauth2-oidc';
         useClass: SubmitMissingTranslationHandler
       },
       defaultLanguage: 'en-US'
-    })
+    }),
+    MatDialogModule
   ],
   exports: [
   ]
@@ -44,7 +47,19 @@ export class AuthModule {
         },
         {
           provide: AuthConfig,
-          useValue: options
+          useFactory: (tenantService: TenantService) : AuthConfig => {
+            // Create config from options
+            var authConfig = new AuthConfig(options);
+            // Replace :tenant with the current tenant
+            if(tenantService){
+              let identifier = '/' + tenantService.currentTenant?.identifier??'';
+              authConfig.issuer = options.issuer?.replace('/:tenant', identifier);
+              authConfig.redirectUri = options.redirectUri?.replace('/:tenant', identifier);
+              authConfig.postLogoutRedirectUri = options.postLogoutRedirectUri?.replace('/:tenant', identifier);
+            }
+            return authConfig;
+          },
+          deps: [TenantService]
         }
       ]
     }

@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
-import { LayoutModule, ProfileDialogService } from '@juice-js/layout';
+import { LayoutModule, UserProfileDialogModule } from '@juice-js/layout';
 
 import { environment } from '../environments/environment';
 import { LocalizeModule, SubmitMissingTranslationHandler } from '@juice-js/localize';
@@ -14,15 +14,13 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { AuthModule } from '@juice-js/auth';
 import { TenantAuthModule } from '@juice-js/tenant';
 import { TenantModule } from '@juice-js/core';
-import { UserProfileComponent } from './user-profile/user-profile.component';
-import { UserProfileDialogService } from './user-profile/user-profile-dialog.service';
+import { CustomUserProfileDialogModule } from './user-profile/custom-user-profile-dialog.module';
 
 const { localize, auth, production, layout, tenants } = environment;
 
 @NgModule({
   declarations: [
-    AppComponent,
-    UserProfileComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +30,7 @@ const { localize, auth, production, layout, tenants } = environment;
     LayoutModule.forRoot(production, layout),
     TenantModule.forRoot(tenants),
     AuthModule.forRoot(auth),
+    UserProfileDialogModule,
     TenantAuthModule,
     AppRoutingModule, // must be last and comes after other modules
     OAuthModule.forRoot(),
@@ -44,10 +43,7 @@ const { localize, auth, production, layout, tenants } = environment;
     })
   ],
   providers: [
-    {
-      provide: ProfileDialogService,
-      useClass: UserProfileDialogService
-    }
+
   ],
   bootstrap: [AppComponent]
 })

@@ -8,7 +8,8 @@ import { StorageResolver } from './resolvers/storage-resolver.service';
   providedIn: 'root'
 })
 export class TenantService {
-
+  currentTenant: TenantInfo|null = null;
+  requestTenantIdentifier: string|null = null;
   resolvers: TenantResolverService[] = [];
   storageResolver: StorageResolver|undefined;
   constructor(
@@ -16,6 +17,7 @@ export class TenantService {
   ) { 
     this.resolvers = inject(TENANT_RESOLVER, {optional: true}) ?? [];
     this.storageResolver = storageResolver;
+    this.currentTenant = this.storageResolver?.getCurrentTenant();
   }
 
   async getTenantIdentifier(){
@@ -28,12 +30,14 @@ export class TenantService {
         return null;
       }
       for(const resolver of this.resolvers.sort((a,b) => b.priority - a.priority)){
+        // console.debug(`Resolving tenant ${identifier} by ${resolver.constructor.name}`);
         var tenant = await firstValueFrom(resolver.getTenantByIdentifier(identifier));
         if(tenant){
           tenant.resolvedBy = resolver.constructor.name;
           console.debug(`Tenant ${tenant.identifier} resolved by ${tenant.resolvedBy}`);
-          if(!(resolver instanceof StorageResolver)){
+          if(!(resolver instanceof StorageResolver) || tenant.identifier != this.currentTenant?.identifier){
             this.storageResolver?.saveTenant(tenant);
+            this.currentTenant = tenant;
           }
           return tenant;
         }
@@ -44,8 +48,18 @@ export class TenantService {
   async getTenantInfo(): Promise<TenantInfo|null>{
      // :tenant/:module/:component
      var tenant = window.location.pathname.split('/')[1];
+     this.requestTenantIdentifier = tenant;
      return (await this.getTenantByIdentifier(tenant))
-      ?? this.storageResolver?.getCurrentTenant()??null
+      ?? this.storedTenant()
+      ?? null
      ;
+  }
+
+  storedTenant(): TenantInfo|null|undefined{
+    return this.storageResolver?.getCurrentTenant();
+  }
+
+  isMatched(): boolean{
+    return this.currentTenant?.identifier == this.requestTenantIdentifier;
   }
 }

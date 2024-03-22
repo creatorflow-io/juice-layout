@@ -34,7 +34,7 @@
                 },
                 {
                     "name": "serve",
-                    "commands": ["Start-Sleep 25", "ng serve --port 4201 --ssl"],
+                    "commands": ["Start-Sleep 25", "ng serve --port 4201 --ssl --ssl-key $env:AppData\\ASP.NET\\Https\\aspnetapp-decrypted.key --ssl-cert $env:AppData\\ASP.NET\\Https\\aspnetapp.crt"],
                     "cwd": "${workspaceFolder}"
                 }
             ],
