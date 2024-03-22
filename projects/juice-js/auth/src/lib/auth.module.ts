@@ -8,11 +8,13 @@ import { LogoutCompletedComponent } from './pages/logout-completed/logout-comple
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { UserInfoComponent } from './pages/protected/user-info/user-info.component';
 import { AuthModuleConfig } from './auth/auth-module.config';
+import { AuthInterceptor } from './auth/auth.interceptor'
 
 import { SubmitMissingTranslationHandler } from '@juice-js/localize';
 import { AuthConfig } from 'angular-oauth2-oidc';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TenantService } from '@juice-js/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,11 @@ export class AuthModule {
     return {
       ngModule: AuthModule,
       providers: [
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: AuthInterceptor,
+          multi: true
+        },
         {
           provide: AuthModuleConfig,
           useValue: options
