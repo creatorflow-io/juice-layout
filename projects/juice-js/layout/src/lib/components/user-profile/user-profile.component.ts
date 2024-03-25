@@ -2,6 +2,7 @@ import { Component, Optional } from '@angular/core';
 import { ProfileDialogService } from './profile-dialog.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { LayoutService } from '../../layout.service';
+import { UserProfile } from './user-profile.model';
 
 @Component({
   selector: 'juice-user-profile',
@@ -16,6 +17,7 @@ export class UserProfileComponent {
     private oauthService: OAuthService) {
     if(this.hasValidToken()){
       const claims = this.oauthService.getIdentityClaims();
+      console.debug('Trying to get image from claims');
       if(claims["picture"]){
         this.imageUrl = claims["picture"];
       }else if(claims["avatar"]){
@@ -30,11 +32,15 @@ export class UserProfileComponent {
               var userProfile = info as UserProfile;
               if(userProfile){
                 this.imageUrl = layoutService.userImageUrl(userProfile.info.preferred_username);
+              }else{
+                console.debug('No user profile', info);
               }
             });
           });
         }
       }
+    }else{
+      console.debug('No valid token');
     }
   }
 
@@ -47,11 +53,4 @@ export class UserProfileComponent {
   private hasValidToken() {
     return this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken();
   }
-}
-
-interface UserInfo {
-  preferred_username: string;
-}
-interface UserProfile {
-  info: UserInfo;
 }

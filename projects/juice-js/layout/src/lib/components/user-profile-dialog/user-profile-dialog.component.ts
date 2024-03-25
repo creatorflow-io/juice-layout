@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { UserProfile } from '../user-profile/user-profile.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,14 +15,31 @@ export class UserProfileDialogComponent {
   constructor(private auth: OAuthService) { 
     if(this.auth.hasValidIdToken()){
       const claims = this.auth.getIdentityClaims();
-      this.name = claims['name'];
-      this.username = claims['preferred_username'];
-      this.email = claims['email']??'';
-      this.loggedin = true;
+      if(claims['preferred_username']){
+        this.setValues(claims);
+      }else{
+        this.auth.loadUserProfile().then(info => {
+          var userProfile = info as UserProfile;
+          if(userProfile){
+            this.setValues(userProfile.info);
+          }else{
+            console.debug('No user profile', info);
+          }
+        });
+      }
     }
   }
 
+  setValues(claims: any){
+    this.username = claims['preferred_username'];
+    this.name = claims['name'];
+    this.email = claims['email']??'';
+    this.loggedin = true;
+  }
+
   logout(){
-    this.auth.logOut();
+    this.auth.loadDiscoveryDocument().then(() => {
+      this.auth.logOut();
+    });
   }
 }
