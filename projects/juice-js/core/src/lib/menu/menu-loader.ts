@@ -10,8 +10,8 @@ export interface DefaultExport<T> {
     default: T;
 }
 
-export function loadChildren(menu: MenuItem, parentInjector: Injector, 
-  tenant: string|null|undefined)
+export async function loadChildren(menu: MenuItem, parentInjector: Injector, 
+  tenant: string|null|undefined): Promise<void>
 {
   if(menu.loaded){
     menu.injectTenant(tenant);
@@ -19,7 +19,7 @@ export function loadChildren(menu: MenuItem, parentInjector: Injector,
   }
   // console.debug("loadChildren", menu.rawRouterLink);
 
-  loadChildrenInternal(menu, parentInjector, tenant)
+  await loadChildrenInternal(menu, parentInjector, tenant)
   .then(children => {
     console.debug("loadedChildren", menu.rawRouterLink, children.map(c => c.rawRouterLink));
     menu.children = children;

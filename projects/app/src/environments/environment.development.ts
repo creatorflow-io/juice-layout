@@ -17,7 +17,7 @@ export const environment = {
     layout:{
         brand: "cfio",
         defaultMenuOpen: true,
-        userImageUrl: "https://host.docker.internal:44316/Account/Auth/ProfileImage?username={username}"
+        userImageUrl: "https://i.pravatar.cc/300"// "https://host.docker.internal:44316/Account/Auth/ProfileImage?username={username}"
     },
     tenants: [
         {

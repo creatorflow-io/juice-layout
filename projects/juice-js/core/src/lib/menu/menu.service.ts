@@ -24,7 +24,12 @@ export class MenuService {
         map(menus => menus.map(m => new MenuItem(m))),
         map(async menus => {
           var tenant = await this.tenantService.getTenantIdentifier();
-          return menus.concat(routeMenus).map(m => {loadChildren(m, this.injector, tenant); return m;})
+          let menuItems = [];
+          for(let menu of menus.concat(routeMenus)){
+            await loadChildren(menu, this.injector, tenant);
+            menuItems.push(menu);
+          }
+          return menuItems;
         }),
         mergeMap(menus => menus),
         map(menus => menus.sort((a,b) => (a.order ?? 0) - (b.order ?? 0)))

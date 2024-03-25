@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:windows": "ng serve --port 4201 --ssl --ssl-cert %APPDATA%\\ASP.NET\\https\\aspnetapp.crt --ssl-key %APPDATA%\\ASP.NET\\https\\aspnetapp-decrypted.key",
+    "start:default": "ng serve --port 4201 --ssl --ssl-cert $HOME/.aspnet/https/aspnetapp.crt --ssl-key $HOME/.aspnet/https/aspnetapp-decrypted.key",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "watch:localize": "ng build --watch --configuration development --project @juice-js/localize",

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PageComponent, PageNotfoundComponent } from '@juice-js/layout';
 import { TenantGuard } from '@juice-js/tenant';
 import { MenuModule, Menus } from '@juice-js/core';
+import { AuthGuard } from '@juice-js/auth';
 
 const routes: Routes = [ 
   { path:':tenant', redirectTo: ':tenant/dashboard', pathMatch: 'full' },
@@ -28,7 +29,7 @@ const routes: Routes = [
       },
       {
         path:'',
-        canActivate: [TenantGuard],
+        canActivate: [TenantGuard, AuthGuard],
         data:{menuDisplay: true},
         loadChildren: () => import('./dashboard1/dashboard1.module').then(m =>{
           return m.Dashboard1Module;
