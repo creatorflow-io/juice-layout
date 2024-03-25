@@ -38,6 +38,7 @@ export class NavMenuComponent {
       this.isExpanded = result.matches ? true : this.layout.isMenuOpen();
     });
     this.service.getMenu().subscribe(items => {
+      console.debug('Menu items', JSON.parse(JSON.stringify(items)));
       this.items = items;
     });
   }

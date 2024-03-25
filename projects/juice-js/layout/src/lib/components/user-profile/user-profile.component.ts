@@ -24,6 +24,15 @@ export class UserProfileComponent {
         const username = claims["preferred_username"];
         if(username){
           this.imageUrl = layoutService.userImageUrl(username);
+        }else{
+          this.oauthService.loadDiscoveryDocument().then(() => {
+            this.oauthService.loadUserProfile().then(info => {
+              var userProfile = info as UserProfile;
+              if(userProfile){
+                this.imageUrl = layoutService.userImageUrl(userProfile.info.preferred_username);
+              }
+            });
+          });
         }
       }
     }
@@ -38,4 +47,11 @@ export class UserProfileComponent {
   private hasValidToken() {
     return this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken();
   }
+}
+
+interface UserInfo {
+  preferred_username: string;
+}
+interface UserProfile {
+  info: UserInfo;
 }
