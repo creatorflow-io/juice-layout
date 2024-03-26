@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { UserProfile } from '../user-profile/user-profile.model';
 
@@ -7,12 +7,16 @@ import { UserProfile } from '../user-profile/user-profile.model';
   templateUrl: './user-profile-dialog.component.html',
   styleUrls: ['./user-profile-dialog.component.scss']
 })
-export class UserProfileDialogComponent {
+export class UserProfileDialogComponent implements OnInit{
   username = '';
   name = '';
   email = '';
   loggedin = false;
   constructor(private auth: OAuthService) { 
+    
+  }
+
+  ngOnInit(): void {
     if(this.auth.hasValidIdToken()){
       const claims = this.auth.getIdentityClaims();
       if(claims['preferred_username']){
