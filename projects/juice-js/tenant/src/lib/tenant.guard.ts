@@ -16,10 +16,8 @@ export class TenantGuard  {
       return true;
     }
     // check if the request is for the tenant-mismatch page
-    if(this.router.url.endsWith('tenant-mismatch')){
-      return true;
-    }
-    console.debug(`Tenant mismatch`, this.router.url);
+   
+    console.debug(`Tenant mismatch`, this.router.url, this.tenantService.requestTenantIdentifier);
     if(this.tenantService.requestTenantIdentifier){
       return this.router.createUrlTree([`/${this.tenantService.requestTenantIdentifier}/tenant-mismatch`]);
     }
