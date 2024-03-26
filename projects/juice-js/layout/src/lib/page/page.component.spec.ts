@@ -14,6 +14,7 @@ import { SearchBarComponent } from '../components/search-bar/search-bar.componen
 import { DarkModeComponent } from '../components/dark-mode/dark-mode.component';
 import { UserProfileComponent } from '../components/user-profile/user-profile.component';
 import { NavMenuComponent } from '../components/nav-menu/nav-menu.component';
+import { IS_PRODUCTION } from '../layout.config';
 
 
 describe('PageComponent', () => {
@@ -40,6 +41,12 @@ describe('PageComponent', () => {
         HttpClientModule,
         BrowserAnimationsModule,
         RouterTestingModule
+      ],
+      providers: [
+        {
+          provide: IS_PRODUCTION,
+          useValue: true
+        }
       ]
     });
     fixture = TestBed.createComponent(PageComponent);
