@@ -18,25 +18,32 @@ export async function loadChildren(menu: MenuItem, parentInjector: Injector,
     return;
   }
   // console.debug("loadChildren", menu.rawRouterLink);
-
+  if(!hasChildren(menu)){
+    return;
+  }
   await loadChildrenInternal(menu, parentInjector, tenant)
   .then(children => {
-    console.debug("loadedChildren", menu.rawRouterLink, children.map(c => c.rawRouterLink));
-    menu.children = children;
+    if(children!=null){
+      console.debug("loadedChildren", menu.rawRouterLink, children.map(c => c.rawRouterLink));
+      menu.children = children;
+      menu.injectTenant(tenant);
+    }
     menu.loaded = true;
-    menu.injectTenant(tenant);
   })
   ;
 }
 
 async function loadChildrenInternal(menu: MenuItem, parentInjector: Injector, tenant: string|null|undefined)
 : Promise<MenuItem[]>{
+  
   var result: MenuItem[] = [];
   var children = await firstValueFrom(getChildren(menu, parentInjector, tenant));
   for(let child of children){
-    var sub = await loadChildrenInternal(child, parentInjector, tenant);
-    if(sub.length > 0){
-      result = result.concat(sub);
+    if(hasChildren(child)){
+      var sub = await loadChildrenInternal(child, parentInjector, tenant);
+      if(sub.length > 0){
+        result = result.concat(sub);
+      }
     }else{
       result.push(child);
     }
@@ -49,6 +56,11 @@ async function loadChildrenInternal(menu: MenuItem, parentInjector: Injector, te
     return child;
   });
 }
+
+function hasChildren(menu: MenuItem): boolean{
+  return !((menu.children == null || menu.children.length==0) && !menu.loadChildren);
+}
+
 function getChildren(menu:MenuItem, parentInjector: Injector, tenant: string|null|undefined) 
   : Observable<MenuItem[]>{
   if(menu.loadChildren){

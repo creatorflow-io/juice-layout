@@ -11,6 +11,13 @@ const routes: Routes = [
       {path: '', component: TenantMismatchComponent}
     ]
   },
+  {
+    path: 'tenant-mismatch',
+    component: PageComponent, 
+    children:[
+      {path: '', component: TenantMismatchComponent}
+    ]
+  }
 ];
 
 @NgModule({
