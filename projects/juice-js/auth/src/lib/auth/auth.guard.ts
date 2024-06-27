@@ -31,7 +31,7 @@ export class AuthGuard  {
       return this.router.createUrlTree([`${this.path}/unauthorized`]);
     }
 
-    return from(this.oauthService.loadDiscoveryDocumentAndTryLogin()).pipe(
+    return from(this.oauthService.loadDiscoveryDocumentAndTryLogin({disableNonceCheck: true})).pipe(
       map(() => {
         if (this.hasValidToken()) {
           if(this.hasValidRole(route)){
