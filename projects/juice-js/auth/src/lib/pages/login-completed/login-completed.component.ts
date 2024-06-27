@@ -30,7 +30,7 @@ export class LoginCompletedComponent implements OnInit {
       this.router.navigateByUrl(redirectUrl);
     });
 
-    await this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    await this.oauthService.loadDiscoveryDocumentAndTryLogin({disableNonceCheck: true});
   }
 
 }
