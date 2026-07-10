@@ -1,4 +1,4 @@
-<mat-expansion-panel [expanded]="router.isActive(item.routerLink, false)" [hideToggle]="!isExpanded" [ngClass]="router.isActive(item.routerLink, false)?'active':''">
+<mat-expansion-panel [expanded]="item.routerLink ? router.isActive(item.routerLink, false) : false" [hideToggle]="!isExpanded" [ngClass]="(item.routerLink && router.isActive(item.routerLink, false)) ? 'active' : ''">
     <mat-expansion-panel-header >
         <mat-list-item routerLink="{{ item.routerLink }}" [routerLinkActive]="['active']" 
             [routerLinkActiveOptions]="{exact: true}">
