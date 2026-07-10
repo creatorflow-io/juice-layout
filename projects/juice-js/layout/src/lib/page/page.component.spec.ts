@@ -5,7 +5,7 @@ import { MatIconModule} from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,32 +23,30 @@ describe('PageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
+    declarations: [
         SearchBarComponent,
         DarkModeComponent,
         UserProfileComponent,
         NavMenuComponent,
         PageComponent
-      ],
-      imports: [
-        MatToolbarModule,
+    ],
+    imports: [MatToolbarModule,
         MatSidenavModule,
         MatIconModule,
         MatListModule,
         MatTooltipModule,
         OAuthModule.forRoot(),
         TranslateModule.forRoot(),
-        HttpClientModule,
         BrowserAnimationsModule,
-        RouterTestingModule
-      ],
-      providers: [
+        RouterTestingModule],
+    providers: [
         {
-          provide: IS_PRODUCTION,
-          useValue: true
-        }
-      ]
-    });
+            provide: IS_PRODUCTION,
+            useValue: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
     fixture = TestBed.createComponent(PageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

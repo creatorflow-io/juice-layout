@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { LocalizeService } from './localize.service';
 import { LocalizeConfig } from './localize.config';
@@ -9,20 +9,19 @@ describe('LocalizeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: LocalizeConfig,
-          useValue: {
-            cultureApi: 'http://localhost:3000/cultures',
-            localizeApi: 'http://localhost:3000/localize',
-            submitMissing: true
-          }
-        }
-      ]
-    });
+            provide: LocalizeConfig,
+            useValue: {
+                cultureApi: 'http://localhost:3000/cultures',
+                localizeApi: 'http://localhost:3000/localize',
+                submitMissing: true
+            }
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
     service = TestBed.inject(LocalizeService);
   });
 
