@@ -26,23 +26,23 @@
 }
 @mixin layout-component-colors($theme) {
     $color-config: mat.m2-get-color-config($theme);
-    $primary-palette: map-get($color-config, 'primary');
-    $background-palette: map-get($color-config, 'background');
-    $accent-palette: map-get($color-config, 'accent');
+    $primary-palette: map.get($color-config, 'primary');
+    $background-palette: map.get($color-config, 'background');
+    $accent-palette: map.get($color-config, 'accent');
     $is-dark-theme: map.get($theme, is-dark);
 
-    $primary: map-get($primary-palette, 500);
-    $powderPrimary: map-get($primary-palette, 200);
-    $lightPrimary: map-get($primary-palette, A100);
-    $darkPrimary: map-get($primary-palette, 800);
+    $primary: map.get($primary-palette, 500);
+    $powderPrimary: map.get($primary-palette, 200);
+    $lightPrimary: map.get($primary-palette, A100);
+    $darkPrimary: map.get($primary-palette, 800);
 
     $gray-palette: mat.m2-define-palette(mat.$m2-gray-palette);
 
     $black: #0A1014;
-    $superlightgray: map-get($gray-palette, 50);
-    $lightgray: map-get($gray-palette, 200);
-    $darkgray: map-get($gray-palette, 700);
-    $deepgray: map-get($gray-palette, 900);
+    $superlightgray: map.get($gray-palette, 50);
+    $lightgray: map.get($gray-palette, 200);
+    $darkgray: map.get($gray-palette, 700);
+    $deepgray: map.get($gray-palette, 900);
 
     /** Scrollbar */
     /* width */
@@ -51,7 +51,7 @@
         height: 10px;
     }
     ::-webkit-scrollbar-thumb {
-        background: map-get($accent-palette, 300);
+        background: map.get($accent-palette, 300);
         border-radius: 10px;
     }
     /* Track */
@@ -65,27 +65,27 @@
     .mat-sidenav {
         .mdc-list-item--with-leading-icon{
             .mdc-list-item__start{
-                color: map-get($accent-palette, 400);
+                color: map.get($accent-palette, 400);
             }
             &:hover{
                 .mdc-list-item__start{
-                    color: map-get($accent-palette, 600);
+                    color: map.get($accent-palette, 600);
                 }
                 .mdc-list-item__primary-text{
-                    color: if($is-dark-theme, $powderPrimary, $primary);
-                    text-shadow: 0 0 5px if($is-dark-theme, $black, white);
+                    color: if(sass($is-dark-theme): $powderPrimary; else: $primary);
+                    text-shadow: 0 0 5px if(sass($is-dark-theme): $black; else: white);
                 }
                 &.active {
                     .mdc-list-item__primary-text{
-                        color: if($is-dark-theme, $powderPrimary, $darkPrimary);
+                        color: if(sass($is-dark-theme): $powderPrimary; else: $darkPrimary);
                     }
                 }
             }
             &.active{
-                background-color: if($is-dark-theme, $darkgray, $lightgray);
+                background-color: if(sass($is-dark-theme): $darkgray; else: $lightgray);
 
                 .mdc-list-item__primary-text{
-                    color: if($is-dark-theme, $lightPrimary, $darkPrimary);
+                    color: if(sass($is-dark-theme): $lightPrimary; else: $darkPrimary);
                 }
             }
         }
