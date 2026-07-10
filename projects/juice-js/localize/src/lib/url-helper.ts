@@ -19,7 +19,9 @@ export class UrlHelper {
   }
 
   getCurrentUrl(): string {
-    return this.router.url;
+    // Router.url can be undefined before the first navigation (Angular v20+);
+    // coalesce to an empty string so downstream string ops stay safe.
+    return this.router.url ?? '';
   }
 
   trimSlash(url: string): string {
