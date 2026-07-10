@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslationObject } from '@ngx-translate/core';
 import { CultureInfo, LocalizeService } from './localize.service';
 import { Router } from '@angular/router';
 import { UrlHelper } from './url-helper';
@@ -25,8 +25,8 @@ export class CultureComponent {
 
     let storedCulture = localStorage.getItem('culture');
       console.debug("stored culture", storedCulture);
-      this.culture = storedCulture ? storedCulture: this.translate.defaultLang;
-      if(this.culture != this.translate.currentLang){
+      this.culture = storedCulture ? storedCulture: (this.translate.getFallbackLang() ?? '');
+      if(this.culture != this.translate.getCurrentLang()){
         localStorage.setItem('culture', this.culture);
       }
       
@@ -40,12 +40,12 @@ export class CultureComponent {
   loadTranslation(){
     this.translate.use(this.culture);
 
-    if(this.culture != this.translate.defaultLang){
+    if(this.culture != this.translate.getFallbackLang()){
       console.debug("loading Translation", this.culture, this.urlHelper.page);
 
       this.localize.fetch(this.culture, this.urlHelper.page).subscribe((data) => {
         console.debug("loaded Translation", data);
-        this.translate.setTranslation(this.culture, data);
+        this.translate.setTranslation(this.culture, data as TranslationObject);
       });
     }
   }

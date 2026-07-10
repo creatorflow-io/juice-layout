@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx-translate/core';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -11,8 +11,9 @@ describe('DashboardComponent', () => {
     TestBed.configureTestingModule({
       declarations: [DashboardComponent],
       imports: [
-        TranslateModule.forRoot()
-      ]
+        TranslatePipe, TranslateDirective
+      ],
+      providers: [provideTranslateService()]
     });
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;

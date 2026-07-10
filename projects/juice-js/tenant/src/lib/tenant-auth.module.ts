@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { TenantRoutingModule } from './tenant-routing.module';
 import { TenantMismatchComponent } from './pages/tenant-mismatch/tenant-mismatch.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
@@ -9,7 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
     ],
     imports: [
         TenantRoutingModule,
-        TranslateModule.forChild()
+        TranslatePipe,
+        TranslateDirective
     ],
     exports: []
 })
