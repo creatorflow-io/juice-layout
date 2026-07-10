@@ -3,9 +3,10 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { UserProfile } from '../user-profile/user-profile.model';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile-dialog.component.html',
-  styleUrls: ['./user-profile-dialog.component.scss']
+    selector: 'app-user-profile',
+    templateUrl: './user-profile-dialog.component.html',
+    styleUrls: ['./user-profile-dialog.component.scss'],
+    standalone: false
 })
 export class UserProfileDialogComponent implements OnInit{
   username = '';

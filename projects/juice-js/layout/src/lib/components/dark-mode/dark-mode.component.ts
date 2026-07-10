@@ -3,8 +3,9 @@ import { LayoutService } from '../../layout.service';
 import { ThemeMode } from '../../layout.config';
 
 @Component({
-  selector: 'juice-dark-mode',
-  templateUrl: './dark-mode.component.html',
+    selector: 'juice-dark-mode',
+    templateUrl: './dark-mode.component.html',
+    standalone: false
 })
 export class DarkModeComponent{
   ThemeMode: typeof ThemeMode = ThemeMode;

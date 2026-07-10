@@ -2,9 +2,10 @@ import { OnInit, Component, ElementRef } from '@angular/core';
 import { TooltipPosition } from './tooltip.directive';
 
 @Component({
-  selector: 'tooltip',
-  templateUrl: './tooltip.component.html',
-  styleUrls: ['./tooltip.component.scss']
+    selector: 'tooltip',
+    templateUrl: './tooltip.component.html',
+    styleUrls: ['./tooltip.component.scss'],
+    standalone: false
 })
 export class TooltipComponent{
   tooltip: string = '';

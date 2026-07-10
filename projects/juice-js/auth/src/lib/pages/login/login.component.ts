@@ -3,9 +3,10 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'page-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'page-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
 

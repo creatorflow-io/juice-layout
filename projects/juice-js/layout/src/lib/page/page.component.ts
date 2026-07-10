@@ -11,42 +11,43 @@ import {
 } from '@angular/animations';
 
 @Component({
-  selector: 'app-page',
-  templateUrl: './page.component.html',
-  styleUrls: ['./page.component.scss'],
-  animations: [
-    trigger('menuTransition', [
-      state('expand', style({
-        width: '220px'
-      })),
-      state('collapsed', style({
-        width: '60px'
-      })),
-      transition('* => collapsed', [
-        animate('0.15s')
-      ]),
-      transition('* => expand', [
-        animate('0.15s')
-      ])
-    ]),
-    trigger('contentTransition', [
-      state('expand', style({
-        "margin-left": "60px"
-      })),
-      state('collapsed', style({
-        "margin-left": "220px"
-      })),
-      state("full", style({
-        "margin-left": "0"
-      })),
-      transition('* => collapsed', [
-        animate('0.15s')
-      ]),
-      transition('* => expand', [
-        animate('0.15s')
-      ])
-    ])
-  ]
+    selector: 'app-page',
+    templateUrl: './page.component.html',
+    styleUrls: ['./page.component.scss'],
+    animations: [
+        trigger('menuTransition', [
+            state('expand', style({
+                width: '220px'
+            })),
+            state('collapsed', style({
+                width: '60px'
+            })),
+            transition('* => collapsed', [
+                animate('0.15s')
+            ]),
+            transition('* => expand', [
+                animate('0.15s')
+            ])
+        ]),
+        trigger('contentTransition', [
+            state('expand', style({
+                "margin-left": "60px"
+            })),
+            state('collapsed', style({
+                "margin-left": "220px"
+            })),
+            state("full", style({
+                "margin-left": "0"
+            })),
+            transition('* => collapsed', [
+                animate('0.15s')
+            ]),
+            transition('* => expand', [
+                animate('0.15s')
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class PageComponent {
   isMobile: boolean = false;

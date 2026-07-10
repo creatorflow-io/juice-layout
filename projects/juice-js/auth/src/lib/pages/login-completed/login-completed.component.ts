@@ -4,9 +4,10 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {delay, filter} from "rxjs/operators";
 
 @Component({
-  selector: 'page-login-completed',
-  templateUrl: './login-completed.component.html',
-  styleUrls: ['./login-completed.component.css']
+    selector: 'page-login-completed',
+    templateUrl: './login-completed.component.html',
+    styleUrls: ['./login-completed.component.css'],
+    standalone: false
 })
 export class LoginCompletedComponent implements OnInit {
 
