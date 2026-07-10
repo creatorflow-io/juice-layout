@@ -1,4 +1,4 @@
-import { Component, Optional, OnInit, inject } from '@angular/core';
+import { Component, Optional, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ProfileDialogService } from './profile-dialog.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { LayoutService } from '../../layout.service';
@@ -10,6 +10,7 @@ import { filter } from "rxjs/operators";
     selector: 'juice-user-profile',
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserProfileComponent implements OnInit{

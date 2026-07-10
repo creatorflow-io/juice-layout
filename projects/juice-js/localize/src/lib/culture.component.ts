@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CultureInfo, LocalizeService } from './localize.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { UrlHelper } from './url-helper';
     selector: 'juice-culture-select',
     templateUrl: './culture.component.html',
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CultureComponent {

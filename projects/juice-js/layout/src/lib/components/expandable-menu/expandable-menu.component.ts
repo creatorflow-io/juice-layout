@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MenuItem } from '@juice-js/core';
 import { Router } from '@angular/router';
 import { TooltipPosition } from '../tooltip/tooltip.directive';
@@ -7,6 +7,7 @@ import { TooltipPosition } from '../tooltip/tooltip.directive';
     selector: 'juice-expandable-menu',
     templateUrl: './expandable-menu.component.html',
     styleUrls: ['./expandable-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ExpandableMenuComponent {
