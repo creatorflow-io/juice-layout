@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { TooltipPosition } from '../tooltip/tooltip.directive';
 
 @Component({
-  selector: 'juice-expandable-menu',
-  templateUrl: './expandable-menu.component.html',
-  styleUrls: ['./expandable-menu.component.scss']
+    selector: 'juice-expandable-menu',
+    templateUrl: './expandable-menu.component.html',
+    styleUrls: ['./expandable-menu.component.scss'],
+    standalone: false
 })
 export class ExpandableMenuComponent {
   @Input()

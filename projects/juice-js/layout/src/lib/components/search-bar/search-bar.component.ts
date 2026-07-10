@@ -10,20 +10,21 @@ import {
 } from '@angular/animations';
 
 @Component({
-  selector: 'juice-search-bar',
-  templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.scss'],
-  animations: [
-    trigger('enableTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('100ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ]),
-  ],
+    selector: 'juice-search-bar',
+    templateUrl: './search-bar.component.html',
+    styleUrls: ['./search-bar.component.scss'],
+    animations: [
+        trigger('enableTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('100ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ]),
+    ],
+    standalone: false
 })
 export class SearchBarComponent {
   searchText: string = "";

@@ -6,9 +6,10 @@ import { TooltipPosition } from '../tooltip/tooltip.directive';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'juice-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss']
+    selector: 'juice-nav-menu',
+    templateUrl: './nav-menu.component.html',
+    styleUrls: ['./nav-menu.component.scss'],
+    standalone: false
 })
 export class NavMenuComponent {
   isExpanded = false;
