@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx-translate/core';
 import { TenantMismatchComponent } from './tenant-mismatch.component';
 
 describe('TenantMismatchComponent', () => {
@@ -10,8 +10,9 @@ describe('TenantMismatchComponent', () => {
     TestBed.configureTestingModule({
       declarations: [TenantMismatchComponent],
       imports: [
-        TranslateModule.forRoot()
-      ]
+        TranslatePipe, TranslateDirective
+      ],
+      providers: [provideTranslateService()]
     });
     fixture = TestBed.createComponent(TenantMismatchComponent);
     component = fixture.componentInstance;

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx-translate/core';
 import { PageNotfoundComponent } from './page-notfound.component';
 
 describe('PageNotfoundComponent', () => {
@@ -10,8 +10,9 @@ describe('PageNotfoundComponent', () => {
     TestBed.configureTestingModule({
       declarations: [PageNotfoundComponent],
       imports: [
-        TranslateModule.forRoot()
-      ]
+        TranslatePipe, TranslateDirective
+      ],
+      providers: [provideTranslateService()]
     });
     fixture = TestBed.createComponent(PageNotfoundComponent);
     component = fixture.componentInstance;

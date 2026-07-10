@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     CommonModule,
     DashboardRoutingModule,
-    TranslateModule.forChild(),
+    TranslatePipe,
+    TranslateDirective,
   ]
 })
 export class DashboardModule { }
