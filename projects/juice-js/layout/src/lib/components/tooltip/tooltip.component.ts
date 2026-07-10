@@ -1,10 +1,11 @@
-import { OnInit, Component, ElementRef } from '@angular/core';
+import { OnInit, Component, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { TooltipPosition } from './tooltip.directive';
 
 @Component({
     selector: 'tooltip',
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TooltipComponent{

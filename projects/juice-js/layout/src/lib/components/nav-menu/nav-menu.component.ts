@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MenuItem, MenuService, TenantService } from '@juice-js/core';
 import { LayoutService } from '../../layout.service';
@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'juice-nav-menu',
     templateUrl: './nav-menu.component.html',
     styleUrls: ['./nav-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class NavMenuComponent {

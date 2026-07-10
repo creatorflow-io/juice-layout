@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TenantService } from '@juice-js/core';
 import { SearchService } from '@juice-js/layout';
 
@@ -6,6 +6,7 @@ import { SearchService } from '@juice-js/layout';
     selector: 'app-dashboard1',
     templateUrl: './dashboard1.component.html',
     styleUrls: ['./dashboard1.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class Dashboard1Component {

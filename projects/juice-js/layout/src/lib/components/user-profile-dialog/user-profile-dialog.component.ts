@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { UserProfile } from '../user-profile/user-profile.model';
 
@@ -6,6 +6,7 @@ import { UserProfile } from '../user-profile/user-profile.model';
     selector: 'app-user-profile',
     templateUrl: './user-profile-dialog.component.html',
     styleUrls: ['./user-profile-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserProfileDialogComponent implements OnInit{
