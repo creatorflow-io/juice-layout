@@ -25,7 +25,7 @@
     @include layout-component-colors($theme);
 }
 @mixin layout-component-colors($theme) {
-    $color-config: mat.get-color-config($theme);
+    $color-config: mat.m2-get-color-config($theme);
     $primary-palette: map-get($color-config, 'primary');
     $background-palette: map-get($color-config, 'background');
     $accent-palette: map-get($color-config, 'accent');
@@ -36,7 +36,7 @@
     $lightPrimary: map-get($primary-palette, A100);
     $darkPrimary: map-get($primary-palette, 800);
 
-    $gray-palette: mat.define-palette(mat.$gray-palette);
+    $gray-palette: mat.m2-define-palette(mat.$m2-gray-palette);
 
     $black: #0A1014;
     $superlightgray: map-get($gray-palette, 50);

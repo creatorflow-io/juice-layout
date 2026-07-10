@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import {} from '@angular/common/http';
 import { AuthLocalStorageService } from './auth.localStorage.service';
 
 describe('AuthLocalStorageService', () => {
