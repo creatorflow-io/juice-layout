@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx-translate/core';
 
 import { CultureComponent } from './culture.component';
 import { LocalizeModule } from './localize.module';
@@ -14,10 +14,12 @@ describe('CultureComponent', () => {
     TestBed.configureTestingModule({
       declarations: [CultureComponent],
       imports: [
-        TranslateModule.forRoot(),
+        TranslatePipe,
+        TranslateDirective,
         LocalizeModule
       ],
       providers:[
+        provideTranslateService(),
         {
             provide: LocalizeConfig,
             useValue: {

@@ -4,7 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileDialogService } from '../user-profile/profile-dialog.service';
 import { UserProfileDialogService } from './user-profile-dialog.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -14,7 +14,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     MatDialogModule,
     MatButtonModule,
-    TranslateModule.forChild(),
+    TranslatePipe,
+    TranslateDirective,
     CommonModule
   ],
   exports: [

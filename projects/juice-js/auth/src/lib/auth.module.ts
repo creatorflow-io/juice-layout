@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
-import { TranslateModule, MissingTranslationHandler } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective, MissingTranslationHandler, provideChildTranslateService } from '@ngx-translate/core';
 
 import { LoginComponent } from './pages/login/login.component';
 import { LoginCompletedComponent } from './pages/login-completed/login-completed.component';
@@ -26,16 +26,19 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     UserInfoComponent
   ],
   imports: [
-    TranslateModule.forChild({
-      missingTranslationHandler: {
-        provide: MissingTranslationHandler,
-        useClass: SubmitMissingTranslationHandler
-      },
-      defaultLanguage: 'en-US'
-    }),
+    TranslatePipe,
+    TranslateDirective,
     MatDialogModule
   ],
   exports: [
+  ],
+  providers: [
+    provideChildTranslateService({
+      missingTranslationHandler: {
+        provide: MissingTranslationHandler,
+        useClass: SubmitMissingTranslationHandler
+      }
+    })
   ]
 })
 export class AuthModule {

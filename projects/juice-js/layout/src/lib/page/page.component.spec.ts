@@ -8,7 +8,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx-translate/core';
 import { PageComponent } from './page.component';
 import { SearchBarComponent } from '../components/search-bar/search-bar.component';
 import { DarkModeComponent } from '../components/dark-mode/dark-mode.component';
@@ -36,7 +36,8 @@ describe('PageComponent', () => {
         MatListModule,
         MatTooltipModule,
         OAuthModule.forRoot(),
-        TranslateModule.forRoot(),
+        TranslatePipe,
+        TranslateDirective,
         BrowserAnimationsModule,
         RouterTestingModule],
     providers: [
@@ -44,7 +45,8 @@ describe('PageComponent', () => {
             provide: IS_PRODUCTION,
             useValue: true
         },
-        provideHttpClient(withXhr(), withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideTranslateService()
     ]
 });
     fixture = TestBed.createComponent(PageComponent);
