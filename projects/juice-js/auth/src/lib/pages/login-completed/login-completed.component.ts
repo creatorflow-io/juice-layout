@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "angular-oauth2-oidc";
 import {delay, filter} from "rxjs/operators";
@@ -7,6 +7,7 @@ import {delay, filter} from "rxjs/operators";
     selector: 'page-login-completed',
     templateUrl: './login-completed.component.html',
     styleUrls: ['./login-completed.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LoginCompletedComponent implements OnInit {

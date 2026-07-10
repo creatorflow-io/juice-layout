@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { UserProfileComponent } from './user-profile.component';
 import { IS_PRODUCTION } from '../../layout.config';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
@@ -19,7 +19,7 @@ describe('UserProfileComponent', () => {
             provide: IS_PRODUCTION,
             useValue: true
         },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
     ]
 });

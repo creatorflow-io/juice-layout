@@ -5,7 +5,7 @@ import { MatIconModule} from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -44,7 +44,7 @@ describe('PageComponent', () => {
             provide: IS_PRODUCTION,
             useValue: true
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
     ]
 });
     fixture = TestBed.createComponent(PageComponent);

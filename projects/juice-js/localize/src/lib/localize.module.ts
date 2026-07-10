@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { CultureComponent } from './culture.component';
 import { LocalizeConfig, ILocalizeConfig } from './localize.config';
 import { LocalizeService } from './localize.service';
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
     ], imports: [MatSelectModule,
         MatOptionModule,
         CommonModule,
-        FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        FormsModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class LocalizeModule {
   public static forRoot(config: ILocalizeConfig): ModuleWithProviders<LocalizeModule> {
 
