@@ -15,7 +15,7 @@ export class AuthGuard  {
     private options: AuthModuleConfig, @Optional() private tenantService: TenantService){
       this.path = new URL(this.options.basePath).pathname;
       if(tenantService){
-        var identifier = '/' + tenantService.currentTenant?.identifier??'';
+        var identifier = '/' + tenantService.currentTenant?.identifier||'';
         this.path = this.path.replace('/:tenant', identifier);
       }
   }
