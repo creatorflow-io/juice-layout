@@ -1,3 +1,9 @@
 <button class="user-image" (click)="onClick()">
-    <img [src]="imageUrl"/>
+    @if (imageUrl && !imageFailed) {
+        <img [src]="imageUrl" (error)="onImageError()"/>
+    } @else if (initials) {
+        <span class="user-image-initials">{{ initials }}</span>
+    } @else {
+        <mat-icon class="user-image-fallback">account_circle</mat-icon>
+    }
 </button>
