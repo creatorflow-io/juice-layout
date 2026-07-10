@@ -17,10 +17,10 @@ export class SubmitMissingTranslationHandler implements MissingTranslationHandle
   }
 
   handle(params: MissingTranslationHandlerParams): string {
-    if(this.keys.indexOf(params.key) < 0 && params.translateService.currentLang != undefined
-      && params.translateService.currentLang != params.translateService.defaultLang
+    if(this.keys.indexOf(params.key) < 0 && params.translateService.getCurrentLang() != null
+      && params.translateService.getCurrentLang() != params.translateService.getFallbackLang()
     ){
-      console.debug("missing translation", params.translateService.currentLang, params.key);
+      console.debug("missing translation", params.translateService.getCurrentLang(), params.key);
       this.keys.push(params.key);
       timer(500).subscribe(()=>this.checkForSubmit());
     }

@@ -9,7 +9,7 @@ import { LayoutModule, UserProfileDialogModule } from '@juice-js/layout';
 
 import { environment } from '../environments/environment';
 import { LocalizeModule, SubmitMissingTranslationHandler } from '@juice-js/localize';
-import { MissingTranslationHandler, TranslateModule } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx-translate/core';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { AuthModule } from '@juice-js/auth';
 import { TenantAuthModule } from '@juice-js/tenant';
@@ -35,15 +35,16 @@ const { localize, auth, production, layout, tenants } = environment;
     AppRoutingModule, // must be last and comes after other modules
     OAuthModule.forRoot(),
     LocalizeModule.forRoot(localize),
-    TranslateModule.forRoot({
-      missingTranslationHandler:{
+    TranslatePipe,
+    TranslateDirective
+  ],
+  providers: [
+    provideTranslateService({
+      missingTranslationHandler: {
         provide: MissingTranslationHandler,
         useClass: SubmitMissingTranslationHandler
       }
     })
-  ],
-  providers: [
-
   ],
   bootstrap: [AppComponent]
 })
