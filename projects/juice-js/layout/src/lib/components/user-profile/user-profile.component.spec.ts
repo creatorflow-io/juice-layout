@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { MatIconModule } from '@angular/material/icon';
 import { UserProfileComponent } from './user-profile.component';
 import { IS_PRODUCTION } from '../../layout.config';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
@@ -13,7 +14,7 @@ describe('UserProfileComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
     declarations: [UserProfileComponent],
-    imports: [OAuthModule.forRoot()],
+    imports: [OAuthModule.forRoot(), MatIconModule],
     providers: [
         {
             provide: IS_PRODUCTION,
