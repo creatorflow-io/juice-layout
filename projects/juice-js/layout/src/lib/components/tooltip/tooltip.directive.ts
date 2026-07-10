@@ -20,7 +20,8 @@ function tooltipPosition(position: string): TooltipPosition {
 }
 
 @Directive({
-  selector: '[tooltip]'
+    selector: '[tooltip]',
+    standalone: false
 })
 export class TooltipDirective {
 

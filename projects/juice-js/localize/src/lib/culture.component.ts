@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { UrlHelper } from './url-helper';
 
 @Component({
-  selector: 'juice-culture-select',
-  templateUrl: './culture.component.html',
-  styles: [
-  ]
+    selector: 'juice-culture-select',
+    templateUrl: './culture.component.html',
+    styles: [],
+    standalone: false
 })
 export class CultureComponent {
   Cultures: CultureInfo[] = [];

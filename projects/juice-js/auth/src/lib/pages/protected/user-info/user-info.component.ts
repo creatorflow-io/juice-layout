@@ -3,9 +3,10 @@ import {Component, OnInit} from '@angular/core';
 import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
-  selector: 'page-user-info',
-  templateUrl: './user-info.component.html',
-  styleUrls: ['./user-info.component.css']
+    selector: 'page-user-info',
+    templateUrl: './user-info.component.html',
+    styleUrls: ['./user-info.component.css'],
+    standalone: false
 })
 export class UserInfoComponent implements OnInit {
 
