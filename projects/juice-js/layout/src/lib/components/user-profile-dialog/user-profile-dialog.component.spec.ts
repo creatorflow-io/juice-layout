@@ -4,7 +4,7 @@ import { UserProfileDialogComponent } from './user-profile-dialog.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('UserProfileDialogComponent', () => {
   let component: UserProfileDialogComponent;
@@ -15,7 +15,7 @@ describe('UserProfileDialogComponent', () => {
     declarations: [UserProfileDialogComponent],
     imports: [OAuthModule.forRoot(),
         TranslateModule.forRoot()],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
 });
     fixture = TestBed.createComponent(UserProfileDialogComponent);
     component = fixture.componentInstance;

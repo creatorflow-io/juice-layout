@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 import { LocalizeService } from './localize.service';
 import { LocalizeConfig } from './localize.config';
@@ -19,7 +19,7 @@ describe('LocalizeService', () => {
                 submitMissing: true
             }
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
     ]
 });
     service = TestBed.inject(LocalizeService);

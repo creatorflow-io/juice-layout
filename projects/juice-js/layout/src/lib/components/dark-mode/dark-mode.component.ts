@@ -1,10 +1,11 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { LayoutService } from '../../layout.service';
 import { ThemeMode } from '../../layout.config';
 
 @Component({
     selector: 'juice-dark-mode',
     templateUrl: './dark-mode.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DarkModeComponent{
