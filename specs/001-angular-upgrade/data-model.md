@@ -38,7 +38,7 @@ The authoritative "data model" for this upgrade is the set of version constraint
 | `@angular/cli` | ~16.2.11 | ^22.x.x | Angular CLI |
 | `@angular/compiler-cli` | ^16.2.11 | ^22.x.x | AOT compiler |
 | `ng-packagr` | ^16.0.0 | ^22.0.0 | Library build tool |
-| `typescript` | ~5.1.3 | ~5.9.x | Required by Angular 22 |
+| `typescript` | ~5.1.3 | ~6.0.3 | Required by Angular 22 (resolved to TS 6.0; needs `ignoreDeprecations: "6.0"`) |
 | `@types/jasmine` | ~4.3.0 | ~5.x.x or latest | May auto-update |
 | `jasmine-core` | ~4.6.0 | latest compatible | May auto-update |
 | `karma` | ~6.4.0 | latest compatible | May auto-update |
@@ -59,6 +59,6 @@ The authoritative "data model" for this upgrade is the set of version constraint
 
 ### Runtime (Node.js)
 
-| Tool | Machine default | Migration target | Notes |
-|------|-----------------|------------------|-------|
-| Node.js | 24.x | 20.19+ (Node 20 LTS) | Supported by Angular 16–22; Node 24 unsupported by Angular 16–19 |
+| Tool | Machine default | Steps 16→21 | Step 22 | Notes |
+|------|-----------------|-------------|---------|-------|
+| Node.js | 24.14.0 | 20.20.2 | 24.18.0 | No single version spans 16→22: Angular 16–19 reject Node 24; Angular 22 requires Node 22.22.3+/24.15.0+/26 (24.14.0 is too old) |

@@ -4,7 +4,7 @@ Auto-generated from all feature plans. Last updated: 2026-06-04
 
 ## Active Technologies
 
-- TypeScript 5.1.3 → 5.9.x (auto-updated per Angular version step) + Angular CLI 22, @angular-devkit/build-angular 22, ng-packagr 22, Node.js 20.19+ (001-angular-upgrade)
+- TypeScript 5.1.3 → 6.0.3 (auto-updated per Angular version step) + Angular CLI 22, @angular-devkit/build-angular 22, ng-packagr 22, Node.js 24.15.0+ required by Angular 22 (Node 20.19+ for steps 16→21) (001-angular-upgrade)
 
 ## Project Structure
 
