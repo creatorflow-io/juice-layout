@@ -7,9 +7,10 @@ import { UserProfile } from './user-profile.model';
 import { filter } from "rxjs/operators";
 
 @Component({
-  selector: 'juice-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss']
+    selector: 'juice-user-profile',
+    templateUrl: './user-profile.component.html',
+    styleUrls: ['./user-profile.component.scss'],
+    standalone: false
 })
 export class UserProfileComponent implements OnInit{
   imageUrl: string = "";
