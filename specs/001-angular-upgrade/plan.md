@@ -12,9 +12,10 @@ migrations. Third-party dependencies (`angular-oauth2-oidc@22`, `@ngx-translate/
 updated after reaching Angular 22. NgModule-to-standalone migration is explicitly out of scope
 and deferred to a future feature.
 
-**Toolchain prerequisite**: The migration passes through Angular 16–19, which do not support
-Node.js 24. A Node.js version supported across the entire 16→22 range (**Node 20.19+**) must be
-installed and active before any `ng update` step runs.
+**Toolchain prerequisite**: Node.js requirements differ across the chain and no single version
+spans it. Angular 16–19 do not support Node 24 (use **Node 20.19+**); Angular **22 drops Node 20**
+and requires **Node 22.22.3+ / 24.15.0+ / 26**. This upgrade ran on Node 20.20.2 for steps 16→21
+and Node **24.18.0** for 22. Also note the final stack resolved to **TypeScript 6.0.3** (not 5.9).
 
 ## Technical Context
 

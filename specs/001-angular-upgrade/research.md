@@ -123,17 +123,24 @@ npm at execution time.
 
 ## Decision 8: Node.js Runtime
 
-**Decision**: Run the entire migration on **Node.js 20.19+** (Node 20 "Iron" LTS line).
+**Decision**: Use **two** Node versions across the chain — there is no single version that spans
+16→22:
+- **Node 20.19+** for Angular 16→21.
+- **Node 24.15.0+** for Angular 22 (which also accepts 22.22.3+ and 26).
 
-**Rationale**: The sequential path passes through Angular 16–19, whose supported Node range tops
-out at Node 20/22 — Node 24 (the machine default) is reported as *Unsupported* by Angular 16 and
-can fail intermediate `ng update`, build, and Karma runs. Node 20.19+ is supported by every
-Angular major from 16 through 22, so a single Node version covers the whole chain with no mid-run
-switch. Node 22.12+ is also valid for Angular 20+ but is not guaranteed clean on Angular 16/17;
-Node 20 is the safe common denominator.
+**Rationale**: Angular 16–19 do not support Node 24 (Angular 16 reports it *Unsupported* and can
+fail intermediate `ng update`/build/Karma runs), so the early steps need Node 20. Angular **22
+dropped Node 20 entirely** — its CLI hard-errors with "requires a minimum Node.js version of
+v22.22.3 or v24.15.0 or v26.0.0". (Note: even the machine's original Node 24.14.0 is below the
+24.15.0 floor.) So Node must be bumped before the 21→22 step.
 
-**Implementation**: Installed via a version manager (nvm-windows) or a direct MSI so the machine
-default (Node 24) can be restored after the upgrade if desired.
+**Implementation (as executed)**: Installed Node 20.20.2 (winget `OpenJS.NodeJS.20`) for steps
+16→21, then Node 24.18.0 (winget `OpenJS.NodeJS.LTS`) for step 22. `node_modules` was reinstalled
+when switching Node so native modules matched the runtime.
+
+**TypeScript note**: Angular 22 in this environment resolved to **TypeScript 6.0.3** (not the ~5.9
+originally assumed). TS 6.0 errors on the deprecated `baseUrl`/`downlevelIteration` options unless
+`"ignoreDeprecations": "6.0"` is set in the root tsconfig.
 
 ---
 

@@ -8,9 +8,12 @@ and working correctly.
 
 ## Prerequisites
 
-- **Node.js 20.19+** installed and active (Node 20 LTS is supported by every Angular major from
-  16 through 22; the machine default Node 24 is *unsupported* by Angular 16–19 and must not be
-  used for the intermediate steps)
+- **Node.js**: the requirement changes across the chain and there is **no single version that
+  spans 16→22**:
+  - Angular 16–19 do **not** support Node 24 → use **Node 20.19+** for those steps.
+  - Angular **22 drops Node 20** and requires **Node 22.22.3+ / 24.15.0+ / 26** → move to
+    **Node 24.15.0+** before the 21→22 step.
+  - This migration was executed on Node 20.20.2 for steps 16→21, then Node **24.18.0** for 22.
 - Git working tree is clean on branch `001-angular-upgrade`
 - You are in the repo root: `D:\Workspaces\Juice\juice-layout`
 
@@ -98,7 +101,8 @@ Open the app in a browser and verify:
 npx ng version
 ```
 
-Expected output includes: `Angular: 22.x.x`, `Angular CLI: 22.x.x`, `TypeScript: 5.9.x`.
+Expected output includes: `Angular: 22.x.x`, `Angular CLI: 22.x.x`, `TypeScript: 6.0.x`
+(Angular 22 in this environment resolved to TypeScript 6.0.3).
 
 ## Acceptance Criteria Checklist
 
