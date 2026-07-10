@@ -4,6 +4,7 @@
 // For more information: https://material.angular.io/guide/theming
 
 @use '@angular/material' as mat;
+@use 'sass:map';
 @use '../../../dist/juice-js/layout/styles/theming' as layout;
 // Plus imports for other components in your app.
 
@@ -50,11 +51,11 @@ $dark-theme: mat.m2-define-dark-theme((
 }
 
 .mat-primary {
-  color: map-get($app-primary, 700);
+  color: map.get($app-primary, 700);
 }
 
 .mat-accent {
-  color: map-get($app-accent, 700);
+  color: map.get($app-accent, 700);
 }
 .density-compact {
     @include mat.all-component-densities(-2);
