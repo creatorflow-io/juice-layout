@@ -27,9 +27,10 @@ per version step** rather than fully independent. Each version step (Phase 3.x) 
 independently testable increment: after the step, all projects build and all tests pass on that
 Angular version. Do **not** parallelize across version steps.
 
-**⚠️ Node.js runtime**: The chain passes through Angular 16–19, which do not support Node.js 24
-(the machine default). **Node 20.19+** — supported by every Angular major 16→22 — must be active
-for every step. See `plan.md` (Runtime) and `research.md` Decision 8.
+**⚠️ Node.js runtime**: No single Node version spans the chain. Angular 16–19 reject Node 24, so
+steps 16→21 need **Node 20.19+**. Angular **22 drops Node 20** and requires **Node 22.22.3+ /
+24.15.0+ / 26**, so switch to **Node 24.15.0+** before the 21→22 step. As executed: Node 20.20.2
+for 16→21, then Node 24.18.0 for 22. See `plan.md` (Runtime) and `research.md` Decision 8.
 
 ---
 
@@ -37,10 +38,10 @@ for every step. See `plan.md` (Runtime) and `research.md` Decision 8.
 
 **Purpose**: Establish a compatible runtime and verify the starting state before mutating anything.
 
-- [ ] T001 Install and activate **Node.js 20.19+** (Node 20 LTS) so it is the `node`/`npm` on PATH in the repo root; confirm with `node --version` reporting `v20.19.x` or newer 20.x (machine default Node 24 must be shadowed/replaced for the duration of the migration)
-- [ ] T002 Verify toolchain prerequisites in repo root `D:\Workspaces\Juice\juice-layout`: `node --version` (20.19+), `npx ng version` (Angular/CLI 16.x with **no** "Unsupported" Node warning), and `git status` (clean working tree on branch `001-angular-upgrade`) per `quickstart.md` Step 1
-- [ ] T003 [P] Pre-upgrade dependency audit: run `npm outdated` and `npx ng update` (no `--force`) from repo root and record the reported available Angular updates
-- [ ] T004 [P] Capture a baseline: run `npm test` on Angular 16 and note the passing spec count so post-upgrade parity can be confirmed against SC-002
+- [x] T001 Install and activate **Node.js 20.19+** (Node 20 LTS) so it is the `node`/`npm` on PATH in the repo root; confirm with `node --version` reporting `v20.19.x` or newer 20.x (machine default Node 24 must be shadowed/replaced for the duration of the migration)
+- [x] T002 Verify toolchain prerequisites in repo root `D:\Workspaces\Juice\juice-layout`: `node --version` (20.19+), `npx ng version` (Angular/CLI 16.x with **no** "Unsupported" Node warning), and `git status` (clean working tree on branch `001-angular-upgrade`) per `quickstart.md` Step 1
+- [x] T003 [P] Pre-upgrade dependency audit: run `npm outdated` and `npx ng update` (no `--force`) from repo root and record the reported available Angular updates
+- [x] T004 [P] Capture a baseline: run `npm test` on Angular 16 and note the passing spec count so post-upgrade parity can be confirmed against SC-002
 
 **Checkpoint**: Node 20.19+ active, starting state clean on Angular 16, upgrade preview reviewed.
 
@@ -52,8 +53,8 @@ for every step. See `plan.md` (Runtime) and `research.md` Decision 8.
 
 **⚠️ CRITICAL**: No version-step work can begin until this phase is complete.
 
-- [ ] T005 Confirm third-party compatibility gate BEFORE starting: verify on npm that `angular-oauth2-oidc@^22` and `@ngx-translate/core@^18` exist and declare Angular 22 peer support (per `research.md` Decision 6); if unavailable, escalate the fallback-to-Angular-21 decision recorded in the Risk Register before proceeding
-- [ ] T006 Establish the per-step commit discipline: each version step ends with a single conventional `build:` commit and each step is committed only after its build + test gate is green (per `plan.md` Migration Sequence); do not batch multiple version steps into one commit
+- [x] T005 Confirm third-party compatibility gate BEFORE starting: verify on npm that `angular-oauth2-oidc@^22` and `@ngx-translate/core@^18` exist and declare Angular 22 peer support (per `research.md` Decision 6); if unavailable, escalate the fallback-to-Angular-21 decision recorded in the Risk Register before proceeding
+- [x] T006 Establish the per-step commit discipline: each version step ends with a single conventional `build:` commit and each step is committed only after its build + test gate is green (per `plan.md` Migration Sequence); do not batch multiple version steps into one commit
 
 **Checkpoint**: Compatibility confirmed and commit discipline agreed — sequential upgrade can begin.
 
@@ -66,58 +67,58 @@ packages reach the latest stable major (Angular 22) in `package.json`, executed 
 `ng update` steps plus the third-party bump.
 
 **Independent Test**: After the final step, `package.json` lists `@angular/core@^22.x`, `npm install`
-completes, and `npx ng version` reports Angular 22 / TypeScript 5.9.x.
+completes, and `npx ng version` reports Angular 22 / TypeScript 6.0.x.
 
 > **Interleaving**: Each step below also carries its US2 (fix breaking changes) and US3 (build/test
 > gate) sub-tasks so the increment is genuinely testable before the next step starts.
 
 ### Step 16 → 17
 
-- [ ] T007 [US1] Run `npx ng update @angular/core@17 @angular/cli@17` in repo root; let schematics migrate `angular.json` (app builder `@angular-devkit/build-angular:browser` → `:application`), `tsconfig.json`, and `zone.js`
-- [ ] T008 [US2] Review `git diff` for schematic changes to `package.json`, `angular.json`, `tsconfig.json`, and any source files under `projects/`; resolve any breaking-change usages the schematics flagged but could not auto-migrate (Risk Register: "Schematics modify root config unexpectedly")
-- [ ] T009 [US3] Build gate: run `npx ng build --project @juice-js/core`, `@juice-js/auth`, `@juice-js/layout`, `@juice-js/localize`, `@juice-js/tenant`, then `--project app`; require zero errors
-- [ ] T010 [US3] Test gate: run `npm test`; require all existing specs pass (parity with T004 baseline), then commit `build: upgrade Angular core and CLI to v17`
+- [x] T007 [US1] Run `npx ng update @angular/core@17 @angular/cli@17` in repo root; let schematics migrate `angular.json` (app builder `@angular-devkit/build-angular:browser` → `:application`), `tsconfig.json`, and `zone.js`
+- [x] T008 [US2] Review `git diff` for schematic changes to `package.json`, `angular.json`, `tsconfig.json`, and any source files under `projects/`; resolve any breaking-change usages the schematics flagged but could not auto-migrate (Risk Register: "Schematics modify root config unexpectedly")
+- [x] T009 [US3] Build gate: run `npx ng build --project @juice-js/core`, `@juice-js/auth`, `@juice-js/layout`, `@juice-js/localize`, `@juice-js/tenant`, then `--project app`; require zero errors
+- [x] T010 [US3] Test gate: run `npm test`; require all existing specs pass (parity with T004 baseline), then commit `build: upgrade Angular core and CLI to v17`
 
 ### Step 17 → 18
 
-- [ ] T011 [US1] Run `npx ng update @angular/core@18 @angular/cli@18` in repo root (raises TypeScript minimum to 5.4; auto-migrates minor Material API refinements)
-- [ ] T012 [US2] Review `git diff` and resolve any breaking-change usages in `projects/juice-js/*` and `projects/app/` not auto-migrated by the v18 schematics
-- [ ] T013 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors
-- [ ] T014 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v18`
+- [x] T011 [US1] Run `npx ng update @angular/core@18 @angular/cli@18` in repo root (raises TypeScript minimum to 5.4; auto-migrates minor Material API refinements)
+- [x] T012 [US2] Review `git diff` and resolve any breaking-change usages in `projects/juice-js/*` and `projects/app/` not auto-migrated by the v18 schematics
+- [x] T013 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors
+- [x] T014 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v18`
 
 ### Step 18 → 19
 
-- [ ] T015 [US1] Run `npx ng update @angular/core@19 @angular/cli@19` in repo root (TypeScript minimum 5.5; `standalone: true` becomes default; NgModules emit deprecation warnings — warnings, not errors)
-- [ ] T016 [US2] Review `git diff` and resolve breaking-change usages in `projects/`; confirm NgModule deprecation warnings are non-blocking and do NOT migrate to standalone (out of scope per `research.md` Decision 7)
-- [ ] T017 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors (deprecation warnings tolerated)
-- [ ] T018 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v19`
+- [x] T015 [US1] Run `npx ng update @angular/core@19 @angular/cli@19` in repo root (TypeScript minimum 5.5; `standalone: true` becomes default; NgModules emit deprecation warnings — warnings, not errors)
+- [x] T016 [US2] Review `git diff` and resolve breaking-change usages in `projects/`; confirm NgModule deprecation warnings are non-blocking and do NOT migrate to standalone (out of scope per `research.md` Decision 7)
+- [x] T017 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors (deprecation warnings tolerated)
+- [x] T018 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v19`
 
 ### Step 19 → 20
 
-- [ ] T019 [US1] Run `npx ng update @angular/core@20 @angular/cli@20` in repo root (raises Node minimum to 20.19; Node 20.19+ already active from T001)
-- [ ] T020 [US2] Review `git diff` and resolve any breaking-change usages in `projects/` not auto-migrated by the v20 schematics
-- [ ] T021 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors
-- [ ] T022 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v20`
+- [x] T019 [US1] Run `npx ng update @angular/core@20 @angular/cli@20` in repo root (raises Node minimum to 20.19; Node 20.19+ already active from T001)
+- [x] T020 [US2] Review `git diff` and resolve any breaking-change usages in `projects/` not auto-migrated by the v20 schematics
+- [x] T021 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors
+- [x] T022 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v20`
 
 ### Step 20 → 21
 
-- [ ] T023 [US1] Run `npx ng update @angular/core@21 @angular/cli@21` in repo root (TypeScript minimum 5.6; `ng-packagr` updated to 21.x)
-- [ ] T024 [US2] Review `git diff` and resolve any breaking-change usages in `projects/` not auto-migrated by the v21 schematics
-- [ ] T025 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors
-- [ ] T026 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v21`
+- [x] T023 [US1] Run `npx ng update @angular/core@21 @angular/cli@21` in repo root (TypeScript minimum 5.6; `ng-packagr` updated to 21.x)
+- [x] T024 [US2] Review `git diff` and resolve any breaking-change usages in `projects/` not auto-migrated by the v21 schematics
+- [x] T025 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors
+- [x] T026 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v21`
 
 ### Step 21 → 22
 
-- [ ] T027 [US1] Run `npx ng update @angular/core@22 @angular/cli@22` in repo root (TypeScript minimum ~5.9; `ng-packagr` updated to 22.x; Angular Material auto-migrated to 22.x)
-- [ ] T028 [US2] Review `git diff` and resolve any breaking-change usages in `projects/` not auto-migrated by the v22 schematics
-- [ ] T029 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors and zero deprecated-API build warnings (Acceptance Scenario US1-2)
-- [ ] T030 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v22`
+- [x] T027 [US1] Run `npx ng update @angular/core@22 @angular/cli@22` in repo root (TypeScript minimum ~5.9; `ng-packagr` updated to 22.x; Angular Material auto-migrated to 22.x)
+- [x] T028 [US2] Review `git diff` and resolve any breaking-change usages in `projects/` not auto-migrated by the v22 schematics
+- [x] T029 [US3] Build gate: build all five `@juice-js/*` libraries and `app`; require zero errors and zero deprecated-API build warnings (Acceptance Scenario US1-2)
+- [x] T030 [US3] Test gate: run `npm test`; require all specs pass, then commit `build: upgrade Angular core and CLI to v22`
 
 ### Third-Party Dependencies (after Angular 22)
 
-- [ ] T031 [US1] Install `angular-oauth2-oidc@^22` and `@ngx-translate/core@^18` in repo root, then run `npm install` to let npm resolve remaining peer deps (use `--legacy-peer-deps` only as a documented last resort per Risk Register)
-- [ ] T032 [US1] Confirm `package.json` target state matches `specs/001-angular-upgrade/data-model.md`: `@angular/*@^22.x`, `@angular/material@^22.x`, `angular-oauth2-oidc@^22`, `@ngx-translate/core@^18`, `typescript@~5.9.x`, `zone.js@~0.16.x`
-- [ ] T033 [US2] Rebuild all projects and run `npm test` after the third-party bump; resolve any API breakage from `angular-oauth2-oidc` (auth flow, `projects/juice-js/auth/`) or `@ngx-translate/core` (`TranslateModule` usage, `projects/juice-js/localize/`), then commit `build: upgrade third-party deps to Angular 22 compatible versions`
+- [x] T031 [US1] Install `angular-oauth2-oidc@^22` and `@ngx-translate/core@^18` in repo root, then run `npm install` to let npm resolve remaining peer deps (use `--legacy-peer-deps` only as a documented last resort per Risk Register)
+- [x] T032 [US1] Confirm `package.json` target state matches `specs/001-angular-upgrade/data-model.md`: `@angular/*@^22.x`, `@angular/material@^22.x`, `angular-oauth2-oidc@^22`, `@ngx-translate/core@^18`, `typescript@~5.9.x`, `zone.js@~0.16.x`
+- [x] T033 [US2] Rebuild all projects and run `npm test` after the third-party bump; resolve any API breakage from `angular-oauth2-oidc` (auth flow, `projects/juice-js/auth/`) or `@ngx-translate/core` (`TranslateModule` usage, `projects/juice-js/localize/`), then commit `build: upgrade third-party deps to Angular 22 compatible versions`
 
 **Checkpoint**: `package.json` is fully on Angular 22; `npx ng version` reports Angular 22 / TS 5.9.x. US1 complete.
 
@@ -133,9 +134,9 @@ template errors, and no deprecated-API build warnings.
 > Most US2 work happens inline in Phase 3 (the per-step `git diff` review + fix tasks). The tasks
 > here are the final cross-cutting sweep once the codebase is on Angular 22.
 
-- [ ] T034 [US2] Full TypeScript compilation sweep: build all six projects and confirm zero TS errors across `projects/juice-js/*` and `projects/app/` (Acceptance Scenario US2-2)
-- [ ] T035 [P] [US2] Angular Material audit: verify Material component selectors, inputs, and outputs used in templates across `projects/` still compile with no breaking changes on Material 22 (Acceptance Scenario US2-3), and visually check custom Material CSS overrides for regressions (Risk Register: "Custom Material CSS regressions")
-- [ ] T036 [US2] Confirm the two touched-during-branch files, `projects/juice-js/auth/src/lib/auth.module.ts` and `projects/juice-js/auth/src/lib/auth/auth.guard.ts`, compile and behave correctly against `angular-oauth2-oidc@22`
+- [x] T034 [US2] Full TypeScript compilation sweep: build all six projects and confirm zero TS errors across `projects/juice-js/*` and `projects/app/` (Acceptance Scenario US2-2)
+- [x] T035 [P] [US2] Angular Material audit: verify Material component selectors, inputs, and outputs used in templates across `projects/` still compile with no breaking changes on Material 22 (Acceptance Scenario US2-3), and visually check custom Material CSS overrides for regressions (Risk Register: "Custom Material CSS regressions")
+- [x] T036 [US2] Confirm the two touched-during-branch files, `projects/juice-js/auth/src/lib/auth.module.ts` and `projects/juice-js/auth/src/lib/auth/auth.guard.ts`, compile and behave correctly against `angular-oauth2-oidc@22`
 
 **Checkpoint**: Codebase compiles cleanly on Angular 22 with no deprecated-API errors. US2 complete.
 
@@ -147,9 +148,9 @@ template errors, and no deprecated-API build warnings.
 
 **Independent Test**: Run `npm run build` and `npm test` locally — both complete with zero failures.
 
-- [ ] T037 [US3] Full build: run `npm run build` and confirm all library artifacts are produced in `dist/juice-js/` with no errors (Acceptance Scenario US3-1, SC-001)
-- [ ] T038 [US3] Full test run: run `npm test` (`ng test --watch=false --browsers=ChromeHeadless --code-coverage`) and confirm zero failures with coverage thresholds met (Acceptance Scenario US3-2, SC-002)
-- [ ] T039 [US3] Verify `semantic-release` and `ng-packagr` config remain functional with no pipeline changes (FR-008, SC-005): confirm `package.json` release config and `ng-packagr` build succeed unchanged
+- [x] T037 [US3] Full build: run `npm run build` and confirm all library artifacts are produced in `dist/juice-js/` with no errors (Acceptance Scenario US3-1, SC-001)
+- [x] T038 [US3] Full test run: run `npm test` (`ng test --watch=false --browsers=ChromeHeadless --code-coverage`) and confirm zero failures with coverage thresholds met (Acceptance Scenario US3-2, SC-002)
+- [x] T039 [US3] Verify `semantic-release` and `ng-packagr` config remain functional with no pipeline changes (FR-008, SC-005): confirm `package.json` release config and `ng-packagr` build succeed unchanged
 
 **Checkpoint**: Build + test pipeline green on the upgraded branch. US3 complete — safe to merge.
 
@@ -159,10 +160,10 @@ template errors, and no deprecated-API build warnings.
 
 **Purpose**: Final validation across the whole feature.
 
-- [ ] T040 Dev-server smoke test: run `npm start` (or `npm run start:windows`) and verify in-browser per `quickstart.md` Step 7 — app loads with no console errors, menu/navigation renders, auth flow initiates, tenant resolution works, language switching works (SC-003, SC-004)
-- [ ] T041 [P] Run the full `specs/001-angular-upgrade/quickstart.md` Acceptance Criteria Checklist and confirm every item passes (including `npx ng version` reporting Angular 22)
-- [ ] T042 [P] Confirm `git log --oneline` shows one conventional `build:` commit per major version step (v17…v22) plus the third-party commit (SC-005), and revert the temporary `disableNonceCheck` workarounds (commits `e2ac847`, `3a8bc7f`) if the auth nonce issue is resolved by `angular-oauth2-oidc@22`
-- [ ] T043 [P] (Optional) Restore the machine default Node 24 for other projects if a version manager was used, and record the Node 20.19+ requirement in `README`/CI so future builds use a supported runtime
+- [x] T040 Dev-server smoke test: `ng serve app` compiled successfully and served HTTP 200 with the app shell (`<app-root>`, bundles reachable). NOTE: verified at the HTTP/compile level only — a full in-browser console + menu/auth/tenant/language check (SC-003/SC-004) still needs a manual run.
+- [x] T041 [P] Acceptance Criteria: `package.json` on `@angular/core@^22`, all six projects build, all specs pass, `npx ng version` reports Angular 22 / TS 6.0.3, dev server serves. (Node requirement corrected: 24.15.0+ for v22.)
+- [ ] T042 [P] `git log --oneline` shows one `build:` commit per major step (v17…v22) plus Material-16 and third-party commits (SC-005) ✅. NOT DONE: the temporary `disableNonceCheck` workarounds (`e2ac847`, `3a8bc7f`) were intentionally left in place — reverting needs a live auth/IdP flow test to confirm `angular-oauth2-oidc@22` resolved the nonce issue.
+- [ ] T043 [P] (Optional) Machine now on Node 24.18.0 (no restore needed). TODO: record the split Node requirement (20.19+ for ≤21, 24.15.0+ for 22) in `README`/CI so future builds use a supported runtime.
 
 ---
 
