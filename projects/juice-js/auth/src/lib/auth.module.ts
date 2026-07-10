@@ -59,7 +59,7 @@ export class AuthModule {
             var authConfig = new AuthConfig(options);
             // Replace :tenant with the current tenant
             if(tenantService){
-              let identifier = '/' + tenantService.currentTenant?.identifier??'';
+              let identifier = '/' + tenantService.currentTenant?.identifier||'';
               authConfig.issuer = options.issuer?.replace('/:tenant', identifier);
               authConfig.redirectUri = options.redirectUri?.replace('/:tenant', identifier);
               authConfig.postLogoutRedirectUri = options.postLogoutRedirectUri?.replace('/:tenant', identifier);
