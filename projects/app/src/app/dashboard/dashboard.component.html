@@ -1,2 +1,27 @@
 <p>{{'dashboard works!' | translate}}</p>
-{{ tenantIdentifier }}
+<p>Tenant: <strong>{{ tenantIdentifier }}</strong></p>
+
+<section class="idem-demo">
+  <h3>Idempotency interceptor demo</h3>
+  <p class="hint">
+    Each button sends an opted-in <code>POST</code> to the in-app mock backend. Open DevTools →
+    Network to watch the <code>Idempotency-Key</code> header and the retry behaviour.
+  </p>
+
+  <div class="buttons">
+    <button type="button" (click)="send('success')">Success (200)</button>
+    <button type="button" (click)="doubleClick()">Double-click (coalesce, FR-009)</button>
+    <button type="button" (click)="send('in-progress')">In-progress → retry (409×2 → 200)</button>
+    <button type="button" (click)="send('stuck')">Stuck (409 forever → exhausted)</button>
+    <button type="button" (click)="send('conflict')">Conflict (422)</button>
+    <button type="button" (click)="send('required')">Required key (400)</button>
+    <button type="button" class="real" (click)="sendReal()">Real backend (on the wire)</button>
+    <button type="button" class="clear" (click)="clear()">Clear log</button>
+  </div>
+
+  <ul class="log">
+    <li *ngFor="let line of log" [class]="line.kind">
+      <span class="ts">{{ line.at }}</span> {{ line.text }}
+    </li>
+  </ul>
+</section>
