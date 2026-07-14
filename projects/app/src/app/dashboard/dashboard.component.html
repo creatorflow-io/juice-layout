@@ -15,7 +15,7 @@
     <button type="button" (click)="send('stuck')">Stuck (409 forever → exhausted)</button>
     <button type="button" (click)="send('conflict')">Conflict (422)</button>
     <button type="button" (click)="send('required')">Required key (400)</button>
-    <button type="button" class="real" (click)="sendReal()">Real backend (on the wire)</button>
+    <button type="button" class="real" (click)="sendReal()">Real /api/orders — all cases (on the wire)</button>
     <button type="button" class="clear" (click)="clear()">Clear log</button>
   </div>
 

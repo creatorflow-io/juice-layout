@@ -5,10 +5,11 @@ export const environment = {
         cultureApi: "https://localhost:44311/api/culture",
         appName: "testapp",
     },
-    // Real state-changing endpoint used by the idempotency demo's "Real backend"
-    // button. Point this at an endpoint that accepts the Idempotency-Key header;
-    // the request goes over the wire so the header is visible in DevTools.
-    idempotencyDemoApi: "https://localhost:44311/api/orders",
+    // Host base for the idempotency demo (Juice.Tests.Host). Mock scenario buttons hit
+    // `${base}/mock-api/*`; the "Real backend" button (sendReal) hits the real
+    // `${base}/api/orders` [Idempotent] endpoint, over the wire, so the Idempotency-Key
+    // header and Retry-After hint are visible in DevTools.
+    idempotencyDemoApi: "https://localhost:7226",
     auth: {
         issuer: 'https://host.docker.internal:44316/:tenant',
         redirectUri: 'https://localhost:4201/:tenant/auth/login-completed',
