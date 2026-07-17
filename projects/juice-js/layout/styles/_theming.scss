@@ -22,6 +22,10 @@
         display: block;
     }
 
+    .p-4 {
+        padding: 1rem !important;
+    }
+
     @include layout-component-colors($theme);
 }
 @mixin layout-component-colors($theme) {
