@@ -1,9 +1,9 @@
-@if (isEnabled()) {
+@if (service.isEnabled()) {
   <div @enableTrigger class="search-container">
-    <input type="search" [(ngModel)] ="searchText"
-      (keyup)="onSearchTextChange($event)" placeholder="Search">
-    @if (searchText) {
-      <mat-icon (click)="searchText='';onSearchTextChange($event)" color="primary">
+    <input type="search" [value]="service.query()"
+      (input)="onSearchTextChange($event)" placeholder="Search">
+    @if (service.query()) {
+      <mat-icon (click)="clear($event)" color="primary">
       close</mat-icon>
     }
   </div>

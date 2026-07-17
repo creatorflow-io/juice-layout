@@ -39,7 +39,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content style="margin-left: 0;">
-      <router-outlet (activate)="onAttach"></router-outlet>
+      <router-outlet (activate)="onPageActivate($event)" (deactivate)="onPageDeactivate()"></router-outlet>
     </mat-sidenav-content>
 
   </mat-sidenav-container>
