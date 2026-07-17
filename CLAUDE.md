@@ -1,8 +1,9 @@
 ﻿# juice-layout Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-06-04
+Auto-generated from all feature plans. Last updated: 2026-07-17
 
 ## Active Technologies
+- TypeScript 6.0.3 (`package.json`) + Angular 22.0.6 (core/router/forms/animations), Angular Material 22.0.4, RxJS 7.8, `@angular/cdk` layout (003-conditional-search-box)
 
 - TypeScript 5.1.3 → 6.0.3 (auto-updated per Angular version step) + Angular CLI 22, @angular-devkit/build-angular 22, ng-packagr 22, Node.js 24.15.0+ required by Angular 22 (Node 20.19+ for steps 16→21) (001-angular-upgrade)
 
@@ -22,6 +23,7 @@ npm test; npm run lint
 TypeScript 5.1.3 → 5.9.x (auto-updated per Angular version step): Follow standard conventions
 
 ## Recent Changes
+- 003-conditional-search-box: Added TypeScript 6.0.3 (`package.json`) + Angular 22.0.6 (core/router/forms/animations), Angular Material 22.0.4, RxJS 7.8, `@angular/cdk` layout
 
 - 001-angular-upgrade: Retargeted to Angular 22 (from 21); TypeScript 5.1.3 → 5.9.x, Angular CLI 22, @angular-devkit/build-angular 22, ng-packagr 22, Node.js 20.19+
 
