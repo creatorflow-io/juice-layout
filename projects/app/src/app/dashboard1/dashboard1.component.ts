@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TenantService } from '@juice-js/core';
-import { SearchService } from '@juice-js/layout';
+import { SearchablePage } from '@juice-js/layout';
 
 @Component({
     selector: 'app-dashboard1',
@@ -9,16 +9,18 @@ import { SearchService } from '@juice-js/layout';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class Dashboard1Component {
+export class Dashboard1Component implements SearchablePage {
   tenantIdentifier: string = "";
-  constructor(private tenant: TenantService, private searchService: SearchService) {
+  constructor(private tenant: TenantService) {
     tenant.getTenantIdentifier().then(tenant => {
       console.log(tenant);
       this.tenantIdentifier = tenant??"";
-    }); 
-    searchService.enable((text: string, event: Event)=>{
-      console.log(text, event);
     });
+  }
+
+  /** Implementing this is what puts the search box in the toolbar on this page. */
+  onSearch(query: string, event?: Event): void {
+    console.log(query, event);
   }
 
 }
