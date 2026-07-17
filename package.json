@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "run-script-os",
     "start:windows": "ng serve --port 4201 --ssl --ssl-cert %APPDATA%\\ASP.NET\\https\\aspnetapp.crt --ssl-key %APPDATA%\\ASP.NET\\https\\aspnetapp-decrypted.key",
     "start:default": "ng serve --port 4201 --ssl --ssl-cert $HOME/.aspnet/https/aspnetapp.crt --ssl-key $HOME/.aspnet/https/aspnetapp-decrypted.key",
     "build": "ng build",
@@ -51,6 +51,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "ng-packagr": "^22.0.1",
+    "run-script-os": "^1.1.6",
     "semantic-release": "^22.0.5",
     "typescript": "~6.0.3"
   }
