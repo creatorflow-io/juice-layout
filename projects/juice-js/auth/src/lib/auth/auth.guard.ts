@@ -23,12 +23,14 @@ export class AuthGuard  {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.hasValidToken()) {
       if(!this.hasValidTenant()){
-        return this.router.createUrlTree([`${this.path}/login`], {queryParams: {returnUrl: state.url}});
+        // Re-authenticating cannot fix a tenant mismatch: the IdP would hand back the
+        // same issuer and the /login redirect would bounce straight back here.
+        return this.router.createUrlTree([`${this.path}/unauthorized`], {queryParams: {reason: 'tenant-mismatch'}});
       }
       if(this.hasValidRole(route)){
         return true;
       }
-      return this.router.createUrlTree([`${this.path}/unauthorized`]);
+      return this.router.createUrlTree([`${this.path}/unauthorized`], {queryParams: {reason: 'role-mismatch'}});
     }
 
     return from(this.oauthService.loadDiscoveryDocumentAndTryLogin({disableNonceCheck: true})).pipe(
@@ -37,7 +39,7 @@ export class AuthGuard  {
           if(this.hasValidRole(route)){
             return true;
           }
-          return this.router.createUrlTree([`${this.path}/unauthorized`]);
+          return this.router.createUrlTree([`${this.path}/unauthorized`], {queryParams: {reason: 'role-mismatch'}});
         }
 
         return this.router.createUrlTree([`${this.path}/login`], {queryParams: {returnUrl: state.url}});

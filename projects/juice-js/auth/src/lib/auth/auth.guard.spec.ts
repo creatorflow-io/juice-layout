@@ -154,3 +154,94 @@ describe('AuthGuard (auth flow, Angular 22 / oauth2-oidc@22)', () => {
     expect(result).toBe(true);
   });
 });
+
+/**
+ * Tenant matching, which the suite above cannot cover because it provides a null
+ * TenantService (short-circuiting hasValidTenant() to true).
+ *
+ * The guard derives the tenant from the `iss` claim's last path segment and compares
+ * it to the active tenant. A mismatch must land on /unauthorized, NOT /login: the IdP
+ * would return the same issuer, so a /login redirect bounces back into the guard and
+ * loops forever against a live SSO cookie.
+ */
+describe('AuthGuard (tenant matching)', () => {
+  let guard: AuthGuard;
+  let oauth: jasmine.SpyObj<OAuthService>;
+  let router: jasmine.SpyObj<Router>;
+
+  const config = { basePath: 'https://app.example.com/portal' } as AuthModuleConfig;
+  const state = { url: '/acme/dashboard1' } as RouterStateSnapshot;
+  const route = { data: {} } as unknown as ActivatedRouteSnapshot;
+
+  function createGuard(issuer: string, tenant: string | null): AuthGuard {
+    oauth = jasmine.createSpyObj<OAuthService>('OAuthService', [
+      'hasValidAccessToken',
+      'hasValidIdToken',
+      'getIdentityClaims',
+      'loadDiscoveryDocumentAndTryLogin',
+    ]);
+    // a fully valid session: only the tenant check is under test here
+    oauth.hasValidAccessToken.and.returnValue(true);
+    oauth.hasValidIdToken.and.returnValue(true);
+    oauth.getIdentityClaims.and.returnValue({ iss: issuer });
+
+    router = jasmine.createSpyObj<Router>('Router', ['createUrlTree']);
+    router.createUrlTree.and.callFake(
+      (commands: unknown[], extras?: unknown) =>
+        ({ __urlTree: true, commands, extras } as unknown as UrlTree)
+    );
+
+    TestBed.configureTestingModule({
+      providers: [
+        AuthGuard,
+        { provide: OAuthService, useValue: oauth },
+        { provide: Router, useValue: router },
+        { provide: AuthModuleConfig, useValue: config },
+        {
+          provide: TenantService,
+          useValue: { currentTenant: tenant ? { identifier: tenant } : null },
+        },
+      ],
+    });
+
+    return TestBed.inject(AuthGuard);
+  }
+
+  it('allows access when the issuer tenant segment matches the active tenant', () => {
+    guard = createGuard('https://auth.example.com/acme', 'acme');
+
+    expect(guard.canActivate(route, state)).toBe(true);
+  });
+
+  it('redirects to /unauthorized when the issuer belongs to a different tenant', () => {
+    guard = createGuard('https://auth.example.com/initech', 'acme');
+
+    const result = guard.canActivate(route, state);
+
+    expect(router.createUrlTree).toHaveBeenCalledWith(
+      ['/portal/unauthorized'],
+      { queryParams: { reason: 'tenant-mismatch' } }
+    );
+    expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
+  });
+
+  it('redirects to /unauthorized (not /login) when the issuer carries no tenant segment', () => {
+    // regression: an issuer without a /:tenant path made getTenantFromIssuer return the
+    // host, which never matches the tenant, and the old /login redirect looped forever
+    guard = createGuard('https://auth.example.com', 'acme');
+
+    const result = guard.canActivate(route, state);
+
+    expect(router.createUrlTree).toHaveBeenCalledWith(
+      ['/portal/unauthorized'],
+      { queryParams: { reason: 'tenant-mismatch' } }
+    );
+    expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
+  });
+
+  it('skips the tenant check when no tenant is active', () => {
+    guard = createGuard('https://auth.example.com/acme', null);
+
+    expect(guard.canActivate(route, state)).toBe(true);
+  });
+});
