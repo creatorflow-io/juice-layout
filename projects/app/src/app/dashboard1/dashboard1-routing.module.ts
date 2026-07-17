@@ -12,7 +12,6 @@ const routes: Routes = [
           // menuDisplay: true,
           // menuIcon: 'home',
           // menuOrder: 1
-          searchUrl: 'dashboard1/search'
         }
     }
   ];

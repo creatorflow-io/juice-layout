@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TenantService, withIdempotency } from '@juice-js/core';
+import { SearchablePage } from '@juice-js/layout';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -25,7 +26,7 @@ interface LogLine {
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class DashboardComponent {
+export class DashboardComponent implements SearchablePage {
   tenantIdentifier: string = "";
   log: LogLine[] = [];
   private seq = 0;
@@ -39,6 +40,11 @@ export class DashboardComponent {
       console.log(tenant);
       this.tenantIdentifier = tenant??"";
     });
+  }
+
+  /** Implementing this is what puts the search box in the toolbar on this page. */
+  onSearch(query: string, event?: Event): void {
+    console.log(query, event);
   }
 
   /** Fire one opted-in POST at the given mock scenario. */
