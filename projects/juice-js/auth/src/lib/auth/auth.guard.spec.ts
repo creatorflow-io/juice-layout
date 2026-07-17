@@ -94,7 +94,10 @@ describe('AuthGuard (auth flow, Angular 22 / oauth2-oidc@22)', () => {
 
     const result = await resolve(guard.canActivate(routeWithRoles(['admin']), state));
 
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/portal/unauthorized']);
+    expect(router.createUrlTree).toHaveBeenCalledWith(
+      ['/portal/unauthorized'],
+      { queryParams: { reason: 'role-mismatch' } }
+    );
     expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
   });
 
@@ -141,7 +144,10 @@ describe('AuthGuard (auth flow, Angular 22 / oauth2-oidc@22)', () => {
 
     const result = await resolve(guard.canActivate(routeWithRoles(['admin']), state));
 
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/portal/unauthorized']);
+    expect(router.createUrlTree).toHaveBeenCalledWith(
+      ['/portal/unauthorized'],
+      { queryParams: { reason: 'role-mismatch' } }
+    );
     expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
   });
 
