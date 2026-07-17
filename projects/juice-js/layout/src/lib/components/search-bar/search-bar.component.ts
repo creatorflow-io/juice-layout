@@ -9,6 +9,12 @@ import {
   // ...
 } from '@angular/animations';
 
+/**
+ * The shell's single search box. Mounted once by the toolbar and shared by every page,
+ * so it deliberately owns no state of its own: both its visibility and its text come
+ * from {@link SearchService}, which scopes them to the page on display. A query held
+ * here would outlive the page that was searched and surface on the next one.
+ */
 @Component({
     selector: 'juice-search-bar',
     templateUrl: './search-bar.component.html',
@@ -28,16 +34,16 @@ import {
     standalone: false
 })
 export class SearchBarComponent {
-  searchText: string = "";
-  constructor(private service: SearchService) { 
+  constructor(public service: SearchService) {
 
   }
 
-  isEnabled(): boolean {
-    return this.service.isEnabled;
+  onSearchTextChange(event: Event){
+    const text = (event.target as HTMLInputElement).value;
+    this.service.submit(text, event);
   }
-  
-  onSearchTextChange(event: any){
-    this.service.callback(this.searchText, event);
+
+  clear(event: Event){
+    this.service.submit('', event);
   }
 }
