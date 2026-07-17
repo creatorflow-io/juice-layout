@@ -21,7 +21,6 @@ import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { ExpandableMenuComponent } from './components/expandable-menu/expandable-menu.component';
 import { PageNotfoundComponent } from './pages/page-notfound/page-notfound.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
-import { FormsModule } from '@angular/forms';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const routes: Routes = [ 
@@ -41,7 +40,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
-    FormsModule,
     TranslatePipe,
     TranslateDirective,
     MatIconModule,

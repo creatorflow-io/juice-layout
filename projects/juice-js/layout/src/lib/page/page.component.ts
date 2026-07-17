@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { LayoutService } from '../layout.service';
+import { SearchService } from '../services/search.service';
 import {
   trigger,
   state,
@@ -54,8 +55,9 @@ export class PageComponent {
   isMobile: boolean = false;
   isSnavOpenned: boolean = false;
   
-  constructor(public service: LayoutService, 
-    private breakpointObserver: BreakpointObserver) { 
+  constructor(public service: LayoutService,
+    private search: SearchService,
+    private breakpointObserver: BreakpointObserver) {
     breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait
@@ -79,7 +81,19 @@ export class PageComponent {
     return "48px"; // this.isMobile ? "42px" : "48px";
   }
 
-  public onAttach(e: any){
-    console.log("attached", e);
+  /**
+   * The routed page just became visible — offer search if it supports it.
+   *
+   * Driven by the outlet rather than by router events on purpose: the outlet does not
+   * deactivate for a cancelled navigation or a param-only change that reuses the
+   * component, so the box correctly survives both.
+   */
+  public onPageActivate(instance: unknown): void {
+    this.search.bindPage(instance);
+  }
+
+  /** The routed page is going away — take the search box with it. */
+  public onPageDeactivate(): void {
+    this.search.unbindPage();
   }
 }
