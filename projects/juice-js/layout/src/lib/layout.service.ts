@@ -1,4 +1,4 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable, Optional, signal } from '@angular/core';
 import { LayoutConfig, ThemeMode } from './layout.config';
 import { TenantInfo, TenantService } from '@juice-js/core';
 
@@ -9,17 +9,25 @@ export class LayoutService {
   public static DARK_MODE = "IS_DARK_MODE";
   public static MENU_OPEN = "IS_MENU_OPEN";
 
-  tenantIdentifier: string = "";
-
-  private _tenant: TenantInfo|null = null;
+  // Signals, not plain fields: the tenant arrives after the shell has rendered, and templates reading
+  // brandName()/brandLogo()/tenantIdentifier must re-render then, also in zoneless apps.
+  private readonly _tenantIdentifier = signal("");
+  private readonly _tenant = signal<TenantInfo|null>(null);
   private _options: LayoutConfig;
-  
-  constructor(@Optional() options: LayoutConfig, 
+
+  get tenantIdentifier(): string {
+    return this._tenantIdentifier();
+  }
+  set tenantIdentifier(value: string) {
+    this._tenantIdentifier.set(value);
+  }
+
+  constructor(@Optional() options: LayoutConfig,
     tenantService: TenantService
     ) {
     tenantService?.getTenantInfo().then(tenantInfo => {
-      this.tenantIdentifier = tenantInfo?.identifier ??"";
-      this._tenant = tenantInfo;
+      this._tenantIdentifier.set(tenantInfo?.identifier ??"");
+      this._tenant.set(tenantInfo);
     });
     this._options = options ?? new LayoutConfig();
   }
@@ -57,15 +65,15 @@ export class LayoutService {
   }
 
   public favicon(): string {
-    return this._tenant?.favicon ?? this._options.favicon;
+    return this._tenant()?.favicon ?? this._options.favicon;
   }
 
   public brandName(): string {
-    return this._tenant?.name ?? this._options.brand;
+    return this._tenant()?.name ?? this._options.brand;
   }
 
   public brandLogo(): string {
-    return this._tenant?.logo ?? this._options.brandLogo;
+    return this._tenant()?.logo ?? this._options.brandLogo;
   }
 
   public settingUrl(): string | undefined{

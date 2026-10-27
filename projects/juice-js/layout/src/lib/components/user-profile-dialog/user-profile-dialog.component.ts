@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { UserProfile } from '../user-profile/user-profile.model';
 
@@ -14,7 +14,7 @@ export class UserProfileDialogComponent implements OnInit{
   name = '';
   email = '';
   loggedin = false;
-  constructor(private auth: OAuthService) { 
+  constructor(private auth: OAuthService, private cdr: ChangeDetectorRef) { 
     
   }
 
@@ -28,6 +28,8 @@ export class UserProfileDialogComponent implements OnInit{
           var userProfile = info as UserProfile;
           if(userProfile){
             this.setValues(userProfile.info);
+            // Resolved outside an event: mark explicitly for zoneless apps.
+            this.cdr.markForCheck();
           }else{
             console.debug('No user profile', info);
           }
