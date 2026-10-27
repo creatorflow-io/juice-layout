@@ -1,11 +1,18 @@
-import { Component, Optional, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Optional, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProfileDialogService } from './profile-dialog.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { LayoutService } from '../../layout.service';
 import { IS_PRODUCTION } from '../../layout.config';
 import { UserProfile } from './user-profile.model';
-import { filter } from "rxjs/operators";
 
+/**
+ * Toolbar user avatar, or a "Login" button while nobody is signed in.
+ *
+ * The shell renders before a login completes (and before a stored session is refreshed), so the signed-in state is
+ * evaluated in ngOnInit and again on every OAuth event. Async results mark the view for check, so the component
+ * also renders in zoneless apps (the Angular 22 default).
+ */
 @Component({
     selector: 'juice-user-profile',
     templateUrl: './user-profile.component.html',
@@ -17,31 +24,44 @@ export class UserProfileComponent implements OnInit{
   imageUrl: string = "";
   imageFailed = false;
   initials: string = "";
+  authenticated = false;
   isProduction = inject(IS_PRODUCTION);
+
+  @HostBinding('class.anonymous')
+  get anonymous(): boolean {
+    return !this.authenticated;
+  }
 
   constructor(@Optional() private dialogService: ProfileDialogService,
     private layoutService: LayoutService,
-    private oauthService: OAuthService) {
-    this.oauthService.events.pipe(
-      filter(e => e.type === "token_received")
-    ).subscribe((e) => {
-      if(!this.isProduction) console.debug('Token received', e);
-      this.initImageUrl();
+    private oauthService: OAuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef) {
+    this.oauthService.events.subscribe((e) => {
+      if(!this.isProduction && e.type === "token_received") console.debug('Token received', e);
+      this.updateState();
     });
   }
 
   ngOnInit(): void {
-    if(this.hasValidToken()){
-      this.initImageUrl();
-    }else{
-      if(!this.isProduction) console.debug('No valid token', this.oauthService.hasValidAccessToken(), this.oauthService.hasValidIdToken());
+    this.updateState();
+    if(!this.authenticated && !this.isProduction){
+      console.debug('No valid token', this.oauthService.hasValidAccessToken(), this.oauthService.hasValidIdToken());
     }
+  }
+
+  /** Starts the code flow; the login-completed page navigates back to the current route. */
+  async login() {
+    if(!this.oauthService.discoveryDocumentLoaded){
+      await this.oauthService.loadDiscoveryDocument();
+    }
+    this.oauthService.initLoginFlow(this.router.url);
   }
 
   initImageUrl() {
     if(this.imageUrl){return;}
 
-    const claims = this.oauthService.getIdentityClaims();
+    const claims = this.oauthService.getIdentityClaims() ?? {};
     this.initials = this.computeInitials(claims);
     if(!this.isProduction) console.debug('Trying to get avatar from claims');
     if(claims["picture"]){
@@ -57,13 +77,35 @@ export class UserProfileComponent implements OnInit{
         this.oauthService.loadUserProfile().then(info => {
           var userProfile = info as UserProfile;
           if(userProfile){
+            this.initials = this.initials || this.computeInitials(userProfile.info);
             this.setImageUrl(this.layoutService.userImageUrl(userProfile.info.preferred_username));
+            this.cdr.markForCheck();
           }else{
             console.warn('No user profile found', info);
           }
+        }).catch(() => {
+          // Keep the initials / icon fallback.
         });
       }
     }
+  }
+
+  /** Syncs the avatar / login button with the token state. */
+  private updateState() {
+    const authenticated = this.hasValidToken();
+    if(authenticated === this.authenticated){
+      return;
+    }
+    this.authenticated = authenticated;
+    if(authenticated){
+      // Only on the anonymous -> signed-in transition, so thin claims don't
+      // trigger a userinfo request on every OAuth event.
+      this.initImageUrl();
+    }else{
+      this.imageUrl = "";
+      this.initials = "";
+    }
+    this.cdr.markForCheck();
   }
 
   private setImageUrl(url: string) {
@@ -95,8 +137,12 @@ export class UserProfileComponent implements OnInit{
       this.dialogService.open(this.imageUrl);
     }
   }
-  
+
+  /**
+   * Signed in = a usable access token. The id token is not required here: it is short-lived and a refresh-token
+   * grant may not renew it, so it can be expired while the session (and its stored claims) is still valid.
+   */
   private hasValidToken() {
-    return this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken();
+    return this.oauthService.hasValidAccessToken();
   }
 }

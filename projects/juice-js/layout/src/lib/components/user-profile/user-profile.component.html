@@ -1,9 +1,16 @@
-<button class="user-image" (click)="onClick()">
-    @if (imageUrl && !imageFailed) {
-        <img [src]="imageUrl" (error)="onImageError()"/>
-    } @else if (initials) {
-        <span class="user-image-initials">{{ initials }}</span>
-    } @else {
-        <mat-icon class="user-image-fallback">account_circle</mat-icon>
-    }
-</button>
+@if (authenticated) {
+    <button class="user-image" (click)="onClick()">
+        @if (imageUrl && !imageFailed) {
+            <img [src]="imageUrl" (error)="onImageError()"/>
+        } @else if (initials) {
+            <span class="user-image-initials">{{ initials }}</span>
+        } @else {
+            <mat-icon class="user-image-fallback">account_circle</mat-icon>
+        }
+    </button>
+} @else {
+    <button mat-button class="login-button" (click)="login()">
+        <mat-icon>login</mat-icon>
+        {{ 'Login' | translate }}
+    </button>
+}
