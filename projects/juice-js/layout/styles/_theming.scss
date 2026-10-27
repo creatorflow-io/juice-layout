@@ -95,4 +95,14 @@
         }
     }
     /** Sidenav */
+
+    /** Menu panel */
+    // Material only colours .mat-mdc-menu-item; any other content in a panel
+    // (headers, lists, notification items) inherits from the overlay container,
+    // which has no theme colour — black text on the dark-theme panel.
+    $foreground-palette: map.get($color-config, 'foreground');
+    .mat-mdc-menu-panel {
+        color: var(--mat-menu-item-label-text-color, #{map.get($foreground-palette, text)});
+    }
+    /** Menu panel */
 }
