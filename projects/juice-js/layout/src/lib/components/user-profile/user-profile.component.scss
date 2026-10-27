@@ -5,6 +5,11 @@
     padding: 3px;
     box-sizing: border-box;
 }
+// Anonymous: the login button sizes to its label instead of a square avatar.
+:host(.anonymous){
+    aspect-ratio: auto;
+    align-items: center;
+}
 .user-image{
     flex: 1 auto;
     border: 0;
