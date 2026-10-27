@@ -14,7 +14,9 @@ export const environment = {
         clientId: 'spa_demo',
         responseType: 'code',
         scope: 'openid profile roles tenants-api',
-        basePath : 'https://localhost:4201/:tenant/auth'
+        basePath : 'https://localhost:4201/:tenant/auth',
+        // The APIs that get the bearer token (default: this app's origin only).
+        allowedUrls: ['', 'https://localhost:44311'],
     },
     layout:{
         brand: "cfio",
