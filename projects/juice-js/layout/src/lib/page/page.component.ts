@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { LayoutService } from '../layout.service';
 import { SearchService } from '../services/search.service';
@@ -57,13 +57,15 @@ export class PageComponent {
   
   constructor(public service: LayoutService,
     private search: SearchService,
-    private breakpointObserver: BreakpointObserver) {
+    private breakpointObserver: BreakpointObserver,
+    cdr: ChangeDetectorRef) {
     breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait
     ]).subscribe(result => {
       this.isMobile = result.matches;
       this.isSnavOpenned = !this.isMobile;
+      cdr.markForCheck();
     });
   }
 

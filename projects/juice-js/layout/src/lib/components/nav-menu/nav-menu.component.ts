@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MenuItem, MenuService, TenantService } from '@juice-js/core';
 import { LayoutService } from '../../layout.service';
@@ -23,14 +23,19 @@ export class NavMenuComponent {
   constructor(private service: MenuService, 
     public layout: LayoutService, private tenantService: TenantService,
     private route: ActivatedRoute,
-    private breakpointObserver: BreakpointObserver) {
+    private breakpointObserver: BreakpointObserver,
+    private cdr: ChangeDetectorRef) {
     
     if(route.snapshot.data['settingUrl']){
       this.settingUrl = route.snapshot.data['settingUrl'];
     }else{
       this.settingUrl = layout.settingUrl();
     }
-    tenantService.getTenantIdentifier().then(tenant => { this.settingUrl = this.settingUrl?.injectTenant(tenant); });
+    // Async callbacks don't trigger change detection in zoneless apps (the Angular 22 default), so mark explicitly.
+    tenantService.getTenantIdentifier().then(tenant => {
+      this.settingUrl = this.settingUrl?.injectTenant(tenant);
+      this.cdr.markForCheck();
+    });
 
     breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
@@ -38,10 +43,12 @@ export class NavMenuComponent {
     ]).subscribe(result => {
       this.isMobile = result.matches;
       this.isExpanded = result.matches ? true : this.layout.isMenuOpen();
+      this.cdr.markForCheck();
     });
     this.service.getMenu().subscribe(items => {
       console.debug('Menu items', JSON.parse(JSON.stringify(items)));
       this.items = items;
+      this.cdr.markForCheck();
     });
   }
 
