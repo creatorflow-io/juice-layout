@@ -43,6 +43,9 @@ describe('AuthGuard (auth flow, Angular 22 / oauth2-oidc@22)', () => {
       'hasValidIdToken',
       'getIdentityClaims',
       'loadDiscoveryDocumentAndTryLogin',
+      'getRefreshToken',
+      'loadDiscoveryDocument',
+      'refreshToken',
     ]);
     oauth.hasValidAccessToken.and.callFake(() => sessionValid);
     oauth.hasValidIdToken.and.callFake(() => sessionValid);
@@ -151,6 +154,30 @@ describe('AuthGuard (auth flow, Angular 22 / oauth2-oidc@22)', () => {
     expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
   });
 
+  it('renews an expired session with the refresh token instead of redirecting to /login', async () => {
+    oauth.getRefreshToken.and.returnValue('r1');
+    oauth.refreshToken.and.callFake(async () => {
+      sessionValid = true;
+      return {} as never;
+    });
+    oauth.getIdentityClaims.and.returnValue({ role: 'admin' });
+
+    const result = await resolve(guard.canActivate(routeWithRoles(['admin']), state));
+
+    expect(oauth.refreshToken).toHaveBeenCalledTimes(1);
+    expect(result).toBe(true);
+  });
+
+  it('redirects to /login when the refresh fails', async () => {
+    oauth.getRefreshToken.and.returnValue('r1');
+    oauth.refreshToken.and.rejectWith(new Error('invalid_grant'));
+
+    const result = await resolve(guard.canActivate(routeWithRoles(undefined), state));
+
+    expect(router.createUrlTree).toHaveBeenCalledWith(['/portal/login'], { queryParams: { returnUrl: '/secure/page' } });
+    expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
+  });
+
   it('supports array-valued role claims (grants when any role matches)', async () => {
     sessionValid = true;
     oauth.getIdentityClaims.and.returnValue({ role: ['editor', 'admin'] });
@@ -185,6 +212,9 @@ describe('AuthGuard (tenant matching)', () => {
       'hasValidIdToken',
       'getIdentityClaims',
       'loadDiscoveryDocumentAndTryLogin',
+      'getRefreshToken',
+      'loadDiscoveryDocument',
+      'refreshToken',
     ]);
     // a fully valid session: only the tenant check is under test here
     oauth.hasValidAccessToken.and.returnValue(true);
@@ -237,6 +267,25 @@ describe('AuthGuard (tenant matching)', () => {
     guard = createGuard('https://auth.example.com', 'acme');
 
     const result = guard.canActivate(route, state);
+
+    expect(router.createUrlTree).toHaveBeenCalledWith(
+      ['/portal/unauthorized'],
+      { queryParams: { reason: 'tenant-mismatch' } }
+    );
+    expect((result as { __urlTree?: boolean }).__urlTree).toBeTrue();
+  });
+
+  it('applies the tenant check to a session the login callback has just established', async () => {
+    guard = createGuard('https://auth.example.com/initech', 'acme');
+    let valid = false;
+    oauth.hasValidAccessToken.and.callFake(() => valid);
+    oauth.hasValidIdToken.and.callFake(() => valid);
+    oauth.loadDiscoveryDocumentAndTryLogin.and.callFake(async () => {
+      valid = true;
+      return true;
+    });
+
+    const result = await firstValueFrom(guard.canActivate(route, state) as Observable<unknown>);
 
     expect(router.createUrlTree).toHaveBeenCalledWith(
       ['/portal/unauthorized'],
