@@ -21,12 +21,9 @@ export class LoginCompletedComponent implements OnInit {
       delay(2000)
     ).subscribe((e) => {
       // `this.oauthService.state` contains the redirect url after login, if any
-
       let redirectUrl = '';
       if (this.oauthService.state) {
-        // TODO: should validate the return url. Also, check if the return URL belongs Wto the current application.
-        redirectUrl = decodeURIComponent(decodeURIComponent(this.oauthService.state));
-        console.log(redirectUrl);
+        redirectUrl = appRelativeUrl(decodeURIComponent(decodeURIComponent(this.oauthService.state)));
       }
 
       this.router.navigateByUrl(redirectUrl);
@@ -35,4 +32,13 @@ export class LoginCompletedComponent implements OnInit {
     await this.oauthService.loadDiscoveryDocumentAndTryLogin({disableNonceCheck: true});
   }
 
+}
+
+/**
+ * The return URL when it is a path of this application (`/…`), otherwise `''` (the app root). The OAuth `state`
+ * round-trips through the browser, so an absolute or protocol-relative URL (`https://…`, `//…`, `/\…`) is not
+ * followed.
+ */
+export function appRelativeUrl(url: string): string {
+  return url.startsWith('/') && !url.startsWith('//') && !url.startsWith('/\\') ? url : '';
 }
