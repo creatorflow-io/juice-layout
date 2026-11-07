@@ -1,7 +1,8 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, DestroyRef, OnInit, ChangeDetectionStrategy, inject} from '@angular/core';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "angular-oauth2-oidc";
-import {delay, filter} from "rxjs/operators";
+import {delay, filter, take} from "rxjs/operators";
 
 @Component({
     selector: 'page-login-completed',
@@ -11,14 +12,18 @@ import {delay, filter} from "rxjs/operators";
     standalone: false
 })
 export class LoginCompletedComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private oauthService: OAuthService) {
   }
 
   async ngOnInit() {
+    // Only the sign-in itself redirects: a refresh sends token_received too, and this page may be long gone by then.
     this.oauthService.events.pipe(
       filter(e => e.type === "token_received"),
-      delay(2000)
+      take(1),
+      delay(2000),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe((e) => {
       // `this.oauthService.state` contains the redirect url after login, if any
       let redirectUrl = '';
