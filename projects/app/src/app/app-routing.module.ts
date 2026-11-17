@@ -60,6 +60,26 @@ const routes: Routes = [
     ]
   },
   {
+    path:'',
+    component: PageComponent,
+    data:{
+      menuDisplay: true,
+      menuIcon: 'notifications',
+      menuTitle: 'Notifications',
+      menuOrder: 8
+    },
+    children:[
+      {
+        path:':tenant/notifications',
+        data:{
+          menuDisplay: true
+        },
+        canActivate: [TenantGuard, AuthGuard],
+        loadChildren: () => import('@juice-js/notifications').then(m => m.NotificationsRoutingModule)
+      }
+    ]
+  },
+  {
     path:':tenant',
     component: PageComponent,
     children:[

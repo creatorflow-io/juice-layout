@@ -1,0 +1,46 @@
+<section class="juice-notification-settings">
+  <h2>{{ 'Email addresses' | translate }}</h2>
+  <p>{{ 'Notifications are emailed only to addresses you have verified.' | translate }}</p>
+
+  @if (error()) { <p class="error" role="alert">{{ error()! | translate }}</p> }
+
+  <ul class="contact-points" role="list">
+    @for (point of points(); track point.id) {
+      <li class="contact-point">
+        <span class="contact-point-address">{{ point.address }}</span>
+        @if (point.health === 'Failed') {
+          <span class="contact-point-state failed">{{ 'Not delivering: verify it again' | translate }}</span>
+        } @else if (point.verified) {
+          <span class="contact-point-state verified"><mat-icon inline>verified</mat-icon> {{ 'Verified' | translate }}</span>
+        } @else {
+          <span class="contact-point-state">{{ 'Not verified' | translate }}</span>
+        }
+        @if (!point.verified || point.health === 'Failed') {
+          @if (sent()[point.id]; as expires) {
+            <mat-form-field subscriptSizing="dynamic" class="contact-point-code">
+              <mat-label>{{ 'Code' | translate }}</mat-label>
+              <input matInput inputmode="numeric" autocomplete="one-time-code" maxlength="6" [ngModel]="codes()[point.id] ?? ''"
+                (ngModelChange)="setCode(point.id, $event)" (keyup.enter)="verify(point)">
+              <mat-hint>{{ 'Valid until' | translate }} {{ expires | date: 'shortTime' }}</mat-hint>
+            </mat-form-field>
+            <button mat-flat-button type="button" (click)="verify(point)" [disabled]="busy()">{{ 'Verify' | translate }}</button>
+          }
+          <button mat-button type="button" (click)="sendCode(point)" [disabled]="busy()">
+            {{ (sent()[point.id] ? 'Send another code' : 'Send a code') | translate }}
+          </button>
+        }
+        <button mat-icon-button type="button" (click)="remove(point)" [disabled]="busy()" [attr.aria-label]="'Remove' | translate"><mat-icon>delete</mat-icon></button>
+      </li>
+    } @empty {
+      <li>{{ 'No addresses yet.' | translate }}</li>
+    }
+  </ul>
+
+  <form class="contact-point-add" (ngSubmit)="add()">
+    <mat-form-field>
+      <mat-label>{{ 'Add an email address' | translate }}</mat-label>
+      <input matInput type="email" name="address" autocomplete="email" [ngModel]="address()" (ngModelChange)="address.set($event)" required>
+    </mat-form-field>
+    <button mat-flat-button type="submit" [disabled]="busy() || !address().trim()">{{ 'Add' | translate }}</button>
+  </form>
+</section>

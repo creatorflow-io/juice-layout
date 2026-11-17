@@ -1,0 +1,63 @@
+<section class="inbox" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+  <header class="inbox-header">
+    <h2 class="inbox-title">{{ 'Notifications' | translate }}</h2>
+    <mat-slide-toggle class="inbox-actionable" [checked]="inbox.actionableOnly()" (change)="inbox.showActionableOnly($event.checked)">
+      {{ 'Needs action' | translate }} ({{ inbox.actionableOpen() }})
+    </mat-slide-toggle>
+    <button mat-icon-button type="button" (click)="inbox.readAll()" [disabled]="!inbox.unread()"
+      [matTooltip]="'Mark all as read' | translate" [attr.aria-label]="'Mark all as read' | translate">
+      <mat-icon>done_all</mat-icon>
+    </button>
+  </header>
+
+  <mat-button-toggle-group class="inbox-groups" hideSingleSelectionIndicator [value]="inbox.group()" (change)="inbox.showGroup($event.value)"
+    [attr.aria-label]="'Groups' | translate">
+    <mat-button-toggle [value]="null">{{ 'All' | translate }}@if (inbox.unread()) { <span class="unread-count">{{ inbox.unread() }}</span> }</mat-button-toggle>
+    @for (group of inbox.counts()?.groups ?? []; track group.key) {
+      <mat-button-toggle [value]="group.key">{{ group.name }}@if (group.unread) { <span class="unread-count">{{ group.unread }}</span> }</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+
+  @if (inbox.loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (inbox.error()) {
+    <p class="inbox-error" role="alert">{{ 'Notifications could not be loaded.' | translate }}
+      <button mat-button type="button" (click)="inbox.reload()">{{ 'Try again' | translate }}</button></p>
+  }
+
+  <ul class="inbox-items" role="list">
+    @for (item of inbox.items(); track item.id) {
+      <li class="inbox-item" [class.unread]="!item.readAt" [class.urgent]="item.priority === 'high' || item.priority === 'critical'">
+        <button type="button" class="inbox-item-open" (click)="open(item)">
+          <span class="inbox-item-title">{{ item.title }}</span>
+          @if (item.body) { <span class="inbox-item-body">{{ item.body }}</span> }
+          @if (item.actions?.length) {
+            <span class="inbox-item-actions">
+              @for (action of item.actions; track action.id) { <span class="inbox-item-action">{{ action.label }}</span> }
+            </span>
+          }
+          <time class="inbox-item-time" [attr.datetime]="item.createdAt">{{ item.createdAt | date: 'short' }}</time>
+        </button>
+        <span class="inbox-item-tools">
+          <button mat-icon-button type="button" (click)="toggleRead(item, $event)"
+            [matTooltip]="(item.readAt ? 'Mark as unread' : 'Mark as read') | translate"
+            [attr.aria-label]="(item.readAt ? 'Mark as unread' : 'Mark as read') | translate">
+            <mat-icon>{{ item.readAt ? 'mark_email_unread' : 'mark_email_read' }}</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="archive(item, $event)" [matTooltip]="'Archive' | translate" [attr.aria-label]="'Archive' | translate">
+            <mat-icon>archive</mat-icon>
+          </button>
+        </span>
+      </li>
+    } @empty {
+      @if (!inbox.loading()) {
+        <li class="inbox-empty">{{ 'Nothing here.' | translate }}</li>
+      }
+    }
+  </ul>
+
+  @if (inbox.hasMore()) {
+    <button mat-button type="button" class="inbox-more" (click)="inbox.loadMore()" [disabled]="inbox.loading()">{{ 'Show more' | translate }}</button>
+  }
+</section>

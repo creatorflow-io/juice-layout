@@ -4,6 +4,8 @@ export const environment = {
         localizeApi: "https://localhost:44311/api/i18n",
         cultureApi: "https://localhost:44311/api/culture",
     },
+    // Juice.Notifications' API for the notification bell (empty: no bell); see environment.notifications.ts.
+    notificationsApi: "",
     // Host base for the idempotency demo. Mock scenario buttons hit `${base}/mock-api/*`;
     // the "Real backend" button (sendReal) hits the real `${base}/api/orders` endpoint.
     idempotencyDemoApi: "https://localhost:44311",

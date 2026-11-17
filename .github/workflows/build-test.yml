@@ -31,6 +31,7 @@ jobs:
       - run: npm run build @juice-js/layout --if-present
       - run: npm run build @juice-js/auth --if-present
       - run: npm run build @juice-js/tenant --if-present
+      - run: npm run build @juice-js/notifications --if-present
       - run: npm test
         env:
           CI: true
