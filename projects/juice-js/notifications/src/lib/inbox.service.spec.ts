@@ -119,6 +119,29 @@ describe('InboxService', () => {
     answer(0, [item('a')]);
   });
 
+  it('chooses an action and keeps the item as the API answers it, dropping it from "needs action" once decided', async () => {
+    start();
+    answer(1, [item('a', { actions: [{ id: 'approve', label: 'Approve' }], actionable: true, correlation: { state: 'Open', outcome: null, acknowledgedBy: null, resolvedAt: null } })]);
+    const done = inbox.act(inbox.items()[0], 'approve');
+    const req = http.expectOne(`${ME}/inbox/a/actions/approve`);
+    expect(req.request.method).toBe('POST');
+    req.flush(item('a', { actions: [{ id: 'approve', label: 'Approve' }], actionable: true, readAt: 'now',
+      interactions: [{ kind: 'action', actionId: 'approve', at: 'now' }] }));
+    await done;
+    http.expectOne(`${ME}/inbox/counts`).flush(counts(0));
+    expect(inbox.items()[0].interactions![0].actionId).toBe('approve');
+
+    inbox.showActionableOnly(true);
+    http.expectOne((r) => r.url === `${ME}/inbox`).flush([inbox.items()[0]]);
+    // Resolved elsewhere: it isn't actionable any more.
+    hub.last.handlers.changed({ kind: 'changed', items: ['a'] });
+    http.expectOne(`${ME}/inbox/counts`).flush(counts(0));
+    http.expectOne(`${ME}/inbox/a`).flush(item('a', { actions: [{ id: 'approve', label: 'Approve' }], actionable: true,
+      correlation: { state: 'Resolved', outcome: 'Approved', acknowledgedBy: null, resolvedAt: 'now' } }));
+    await settled();
+    expect(inbox.items()).toEqual([]);
+  });
+
   it('stops: the hub closes and the state clears', () => {
     start();
     answer(1, [item('a')]);

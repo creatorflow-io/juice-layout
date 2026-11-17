@@ -104,11 +104,21 @@
   gap: 4px;
 }
 
-.inbox-item-action {
-  padding: 0 8px;
-  border: 1px solid var(--mat-sys-outline, rgba(0, 0, 0, 0.38));
-  border-radius: 12px;
-  font-size: 0.75rem;
+.inbox-item-actions {
+  padding: 0 4px 8px 16px;
+}
+
+.inbox-item-action.chosen {
+  font-weight: 600;
+}
+
+.inbox-item-outcome {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.inbox-item {
+  flex-wrap: wrap;
 }
 
 .inbox-item-time {
