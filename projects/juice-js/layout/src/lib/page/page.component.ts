@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Type, inject } from '@angular/core';
+import { LAYOUT_TOOLBAR_ITEMS } from '../layout.config';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { LayoutService } from '../layout.service';
 import { SearchService } from '../services/search.service';
@@ -52,6 +53,8 @@ import {
     standalone: false
 })
 export class PageComponent {
+  /** The app's own toolbar items ({@link LAYOUT_TOOLBAR_ITEMS}). */
+  readonly toolbarItems: Type<unknown>[] = inject(LAYOUT_TOOLBAR_ITEMS, { optional: true }) ?? [];
   isMobile: boolean = false;
   isSnavOpenned: boolean = false;
   

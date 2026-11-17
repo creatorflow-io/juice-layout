@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Type } from '@angular/core';
 export enum ThemeMode{
     Light = "light",
     Dark = "dark",
@@ -33,3 +33,9 @@ export interface ILayoutConfig{
 }
 
 export const IS_PRODUCTION = new InjectionToken<boolean>('production');
+
+/**
+ * Components an app adds to the toolbar, before the dark mode switch (a notification bell): provide each with `multi: true`.
+ * `{ provide: LAYOUT_TOOLBAR_ITEMS, useValue: NotificationBellComponent, multi: true }`.
+ */
+export const LAYOUT_TOOLBAR_ITEMS = new InjectionToken<Type<unknown>[]>('LAYOUT_TOOLBAR_ITEMS');

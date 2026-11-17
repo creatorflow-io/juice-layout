@@ -24,6 +24,9 @@
     }
     <juice-search-bar></juice-search-bar>
     <span class="toolbar-spacer "></span>
+    @for (item of toolbarItems; track $index) {
+      <ng-container *ngComponentOutlet="item"></ng-container>
+    }
     <juice-dark-mode></juice-dark-mode>
     <juice-user-profile></juice-user-profile>
   </mat-toolbar>
