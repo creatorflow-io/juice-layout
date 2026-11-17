@@ -121,7 +121,7 @@ describe('InboxService', () => {
 
   it('chooses an action and keeps the item as the API answers it, dropping it from "needs action" once decided', async () => {
     start();
-    answer(1, [item('a', { actions: [{ id: 'approve', label: 'Approve' }], actionable: true, correlation: { state: 'Open', outcome: null, acknowledgedBy: null, resolvedAt: null } })]);
+    answer(1, [item('a', { actions: [{ id: 'approve', label: 'Approve' }], actionable: true, correlation: { state: 'open', outcome: null, acknowledgedBy: null, resolvedAt: null } })]);
     const done = inbox.act(inbox.items()[0], 'approve');
     const req = http.expectOne(`${ME}/inbox/a/actions/approve`);
     expect(req.request.method).toBe('POST');
@@ -137,7 +137,7 @@ describe('InboxService', () => {
     hub.last.handlers.changed({ kind: 'changed', items: ['a'] });
     http.expectOne(`${ME}/inbox/counts`).flush(counts(0));
     http.expectOne(`${ME}/inbox/a`).flush(item('a', { actions: [{ id: 'approve', label: 'Approve' }], actionable: true,
-      correlation: { state: 'Resolved', outcome: 'Approved', acknowledgedBy: null, resolvedAt: 'now' } }));
+      correlation: { state: 'resolved', outcome: 'Approved', acknowledgedBy: null, resolvedAt: 'now' } }));
     await settled();
     expect(inbox.items()).toEqual([]);
   });
