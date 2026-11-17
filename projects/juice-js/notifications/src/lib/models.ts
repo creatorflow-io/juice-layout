@@ -11,6 +11,24 @@ export interface InboxAction {
   label: string;
 }
 
+/** A correlation's state, as the API writes it (this enum keeps its own names). */
+export type CorrelationState = 'Open' | 'Acknowledged' | 'Resolved' | 'Cancelled';
+
+/** The item's correlation: open ones wait for someone; a resolved one shows its outcome (Juice.Notifications phase 3). */
+export interface InboxCorrelation {
+  state: CorrelationState;
+  outcome: string | null;
+  acknowledgedBy: string | null;
+  resolvedAt: string | null;
+}
+
+/** What the person did with the item: `read`, `acknowledged`, or `action` with its id. */
+export interface InboxInteraction {
+  kind: 'read' | 'acknowledged' | 'action';
+  actionId: string | null;
+  at: string;
+}
+
 /** An item in the person's inbox. */
 export interface InboxItem {
   id: string;
@@ -25,6 +43,19 @@ export interface InboxItem {
   createdAt: string;
   readAt: string | null;
   archivedAt: string | null;
+  /** Null when the notification has no correlation key. */
+  correlation?: InboxCorrelation | null;
+  interactions?: InboxInteraction[];
+}
+
+/** Whether the item's actions can still be chosen: it has some, and its correlation (if any) is open or acknowledged. */
+export function canAct(item: InboxItem): boolean {
+  return !!item.actions?.length && (!item.correlation || item.correlation.state === 'Open' || item.correlation.state === 'Acknowledged');
+}
+
+/** The action the person chose on the item, if any. */
+export function chosenAction(item: InboxItem): string | null {
+  return item.interactions?.find((i) => i.kind === 'action')?.actionId ?? null;
 }
 
 /** A display group of the tenant, in order, with the person's open and unread counts in it. */
