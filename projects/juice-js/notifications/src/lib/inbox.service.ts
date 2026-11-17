@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
 import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { InboxHubConnector, InboxHubHandle } from './inbox-hub';
-import { InboxChange, InboxCounts, InboxItem, InboxQuery } from './models';
+import { InboxChange, InboxCounts, InboxItem, InboxQuery, canAct } from './models';
 import { NotificationsApi } from './notifications-api.service';
 import { NOTIFICATIONS_CONFIG } from './notifications.config';
 
@@ -116,6 +116,11 @@ export class InboxService implements OnDestroy {
     await this.apply(this.api.archive(item.id, archive), item);
   }
 
+  /** Chooses one of the item's actions; the item comes back with the choice recorded (and the correlation as it stands). */
+  async act(item: InboxItem, actionId: string): Promise<void> {
+    await this.apply(this.api.act(item.id, actionId), item);
+  }
+
   /** Marks every open item read, in the group shown or all. */
   async readAll(): Promise<void> {
     const group = this._group();
@@ -142,7 +147,7 @@ export class InboxService implements OnDestroy {
 
   /** An item as it now is: replaced where shown, or dropped if it no longer belongs to the listing. */
   private replace(item: InboxItem): void {
-    const fits = !item.archivedAt && (this._group() === null || item.group === this._group()) && (!this._actionable() || item.actionable);
+    const fits = !item.archivedAt && (this._group() === null || item.group === this._group()) && (!this._actionable() || canAct(item));
     this._items.update((items) => fits ? items.map((i) => i.id === item.id ? item : i) : items.filter((i) => i.id !== item.id));
   }
 

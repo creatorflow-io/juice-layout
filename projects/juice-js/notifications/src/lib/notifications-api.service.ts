@@ -72,6 +72,19 @@ export class NotificationsApi {
     return this.me((base) => archive ? this.http.post<InboxItem>(url(base), null) : this.http.delete<InboxItem>(url(base)));
   }
 
+  /**
+   * Chooses one of the item's actions: the producer hears it and decides (the inbox decides nothing). Once per action; refused (409
+   * `correlation_closed`) once it has been decided.
+   */
+  act(id: string, actionId: string): Observable<InboxItem> {
+    return this.me((base) => this.http.post<InboxItem>(`${base}/inbox/${encodeURIComponent(id)}/actions/${encodeURIComponent(actionId)}`, null));
+  }
+
+  /** Acknowledges the item: the producer hears it. */
+  acknowledge(id: string): Observable<InboxItem> {
+    return this.me((base) => this.http.post<InboxItem>(`${base}/inbox/${encodeURIComponent(id)}/acknowledge`, null));
+  }
+
   /** Marks every open item read, in one group or all; answers how many were. */
   readAll(group?: string): Observable<number> {
     const params = group ? new HttpParams().set('group', group) : undefined;

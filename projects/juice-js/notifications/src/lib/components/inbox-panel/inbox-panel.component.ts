@@ -8,7 +8,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { InboxService } from '../../inbox.service';
-import { InboxItem } from '../../models';
+import { InboxItem, canAct, chosenAction } from '../../models';
 
 /**
  * The person's inbox: a tab per display group with its unread count, an "actionable and open" filter, the items newest first (unread ones
@@ -48,4 +48,12 @@ export class InboxPanelComponent {
     event.stopPropagation();
     void this.inbox.archive(item);
   }
+
+  act(item: InboxItem, actionId: string, event: Event): void {
+    event.stopPropagation();
+    void this.inbox.act(item, actionId);
+  }
+
+  readonly canAct = canAct;
+  readonly chosen = chosenAction;
 }
