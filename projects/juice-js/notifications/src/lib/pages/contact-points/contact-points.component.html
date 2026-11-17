@@ -8,14 +8,14 @@
     @for (point of points(); track point.id) {
       <li class="contact-point">
         <span class="contact-point-address">{{ point.address }}</span>
-        @if (point.health === 'Failed') {
+        @if (point.health === 'failed') {
           <span class="contact-point-state failed">{{ 'Not delivering: verify it again' | translate }}</span>
         } @else if (point.verified) {
           <span class="contact-point-state verified"><mat-icon inline>verified</mat-icon> {{ 'Verified' | translate }}</span>
         } @else {
           <span class="contact-point-state">{{ 'Not verified' | translate }}</span>
         }
-        @if (!point.verified || point.health === 'Failed') {
+        @if (!point.verified || point.health === 'failed') {
           @if (sent()[point.id]; as expires) {
             <mat-form-field subscriptSizing="dynamic" class="contact-point-code">
               <mat-label>{{ 'Code' | translate }}</mat-label>

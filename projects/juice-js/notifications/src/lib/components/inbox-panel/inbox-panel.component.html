@@ -32,8 +32,8 @@
         <button type="button" class="inbox-item-open" (click)="open(item)">
           <span class="inbox-item-title">{{ item.title }}</span>
           @if (item.body) { <span class="inbox-item-body">{{ item.body }}</span> }
-          @if (item.correlation?.state === 'Resolved' || item.correlation?.state === 'Cancelled') {
-            <span class="inbox-item-outcome">{{ item.correlation!.outcome || (item.correlation!.state === 'Resolved' ? 'Done' : 'Cancelled') | translate }}</span>
+          @if (item.correlation?.state === 'resolved' || item.correlation?.state === 'cancelled') {
+            <span class="inbox-item-outcome">{{ item.correlation!.outcome || (item.correlation!.state === 'resolved' ? 'Done' : 'Cancelled') | translate }}</span>
           }
           <time class="inbox-item-time" [attr.datetime]="item.createdAt">{{ item.createdAt | date: 'short' }}</time>
         </button>

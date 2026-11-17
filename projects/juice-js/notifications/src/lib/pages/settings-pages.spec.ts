@@ -82,7 +82,7 @@ describe('PreferencesComponent', () => {
 
 describe('ContactPointsComponent', () => {
   const point = (change: Partial<ContactPoint> = {}): ContactPoint => ({
-    id: 'p1', channel: 'email', address: 'ann@example.com', verified: false, verifiedAt: null, verifiedBy: null, health: 'Ok', healthReason: null,
+    id: 'p1', channel: 'email', address: 'ann@example.com', verified: false, verifiedAt: null, verifiedBy: null, health: 'ok', healthReason: null,
     createdAt: '2026-11-17T08:00:00Z', ...change,
   });
 

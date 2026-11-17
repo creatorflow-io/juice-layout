@@ -11,8 +11,8 @@ export interface InboxAction {
   label: string;
 }
 
-/** A correlation's state, as the API writes it (this enum keeps its own names). */
-export type CorrelationState = 'Open' | 'Acknowledged' | 'Resolved' | 'Cancelled';
+/** A correlation's state, as the API writes it (camelCase). */
+export type CorrelationState = 'open' | 'acknowledged' | 'resolved' | 'cancelled';
 
 /** The item's correlation: open ones wait for someone; a resolved one shows its outcome (Juice.Notifications phase 3). */
 export interface InboxCorrelation {
@@ -50,7 +50,7 @@ export interface InboxItem {
 
 /** Whether the item's actions can still be chosen: it has some, and its correlation (if any) is open or acknowledged. */
 export function canAct(item: InboxItem): boolean {
-  return !!item.actions?.length && (!item.correlation || item.correlation.state === 'Open' || item.correlation.state === 'Acknowledged');
+  return !!item.actions?.length && (!item.correlation || item.correlation.state === 'open' || item.correlation.state === 'acknowledged');
 }
 
 /** The action the person chose on the item, if any. */
@@ -123,8 +123,8 @@ export interface Me {
   quietHours: QuietHours | null;
 }
 
-/** As the API writes it (this enum keeps its own names: `Ok`, `Bouncing`, `Failed`). A failed address isn't used until verified again. */
-export type ContactHealth = 'Ok' | 'Bouncing' | 'Failed';
+/** As the API writes it (camelCase: `ok`, `bouncing`, `failed`). A failed address isn't used until verified again. */
+export type ContactHealth = 'ok' | 'bouncing' | 'failed';
 
 /** One of the person's addresses; only a verified one that hasn't failed is used. */
 export interface ContactPoint {
