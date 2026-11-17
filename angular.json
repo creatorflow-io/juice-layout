@@ -34,7 +34,9 @@
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["dist/juice-js"]
+              "includePaths": [
+                "dist/juice-js"
+              ]
             }
           },
           "configurations": {
@@ -66,6 +68,20 @@
                   "with": "projects/app/src/environments/environment.development.ts"
                 }
               ]
+            },
+            "notifications": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/app/src/environments/environment.ts",
+                  "with": "projects/app/src/environments/environment.notifications.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -78,6 +94,9 @@
             },
             "development": {
               "buildTarget": "app:build:development"
+            },
+            "notifications": {
+              "buildTarget": "app:build:notifications"
             }
           },
           "defaultConfiguration": "development"
@@ -286,6 +305,44 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/juice-js/core/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "@juice-js/notifications": {
+      "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/juice-js/notifications",
+      "sourceRoot": "projects/juice-js/notifications/src",
+      "prefix": "juice",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/juice-js/notifications/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/juice-js/notifications/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/juice-js/notifications/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/juice-js/notifications/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

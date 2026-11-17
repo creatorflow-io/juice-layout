@@ -12,6 +12,9 @@
       "@juice-js/layout": [
         "dist/juice-js/layout"
       ],
+      "@juice-js/notifications": [
+        "dist/juice-js/notifications"
+      ],
       "@juice-js/localize": [
         "dist/juice-js/localize"
       ],

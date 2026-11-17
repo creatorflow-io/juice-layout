@@ -6,7 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
-import { LayoutModule, UserProfileDialogModule } from '@juice-js/layout';
+import { LAYOUT_TOOLBAR_ITEMS, LayoutModule, UserProfileDialogModule } from '@juice-js/layout';
+import { NotificationBellComponent, NotificationsModule } from '@juice-js/notifications';
 
 import { environment } from '../environments/environment';
 import { LocalizeModule, SubmitMissingTranslationHandler } from '@juice-js/localize';
@@ -18,7 +19,7 @@ import { TenantModule, IdempotencyModule, IDEMPOTENCY_USER_CONTEXT } from '@juic
 import { CustomUserProfileDialogModule } from './user-profile/custom-user-profile-dialog.module';
 import { MockIdempotencyBackendInterceptor } from './mock-backend/mock-idempotency-backend.interceptor';
 
-const { localize, auth, production, layout, tenants } = environment;
+const { localize, auth, production, layout, tenants, notificationsApi } = environment;
 
 @NgModule({
   declarations: [
@@ -38,10 +39,13 @@ const { localize, auth, production, layout, tenants } = environment;
     AppRoutingModule, // must be last and comes after other modules
     OAuthModule.forRoot(),
     LocalizeModule.forRoot(localize),
+    // The person's notification inbox (Juice.Notifications): the bell in the toolbar when an API is configured.
+    NotificationsModule.forRoot({ apiUrl: notificationsApi }),
     TranslatePipe,
     TranslateDirective
   ],
   providers: [
+    ...(notificationsApi ? [{ provide: LAYOUT_TOOLBAR_ITEMS, useValue: NotificationBellComponent, multi: true }] : []),
     provideTranslateService({
       missingTranslationHandler: {
         provide: MissingTranslationHandler,

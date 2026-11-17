@@ -1,0 +1,128 @@
+:host {
+  display: block;
+}
+
+.inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(420px, calc(100vw - 32px));
+  max-height: min(600px, 80vh);
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.inbox-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inbox-title {
+  flex: 1;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.inbox-groups {
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+
+.unread-count {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--mat-sys-primary, #3f51b5);
+  color: var(--mat-sys-on-primary, #fff);
+  font-size: 0.75rem;
+}
+
+.inbox-items {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+
+  &.unread .inbox-item-title {
+    font-weight: 600;
+  }
+
+  &.unread .inbox-item-open::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mat-sys-primary, #3f51b5);
+  }
+
+  &.urgent .inbox-item-title {
+    color: var(--mat-sys-error, #b00020);
+  }
+}
+
+.inbox-item-open {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 8px 4px 8px 16px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.inbox-item-body {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  opacity: 0.8;
+  font-size: 0.875rem;
+}
+
+.inbox-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.inbox-item-action {
+  padding: 0 8px;
+  border: 1px solid var(--mat-sys-outline, rgba(0, 0, 0, 0.38));
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+
+.inbox-item-time {
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+.inbox-item-tools {
+  display: flex;
+}
+
+.inbox-empty,
+.inbox-error {
+  padding: 16px 4px;
+  opacity: 0.7;
+  text-align: center;
+}

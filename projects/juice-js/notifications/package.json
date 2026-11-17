@@ -1,0 +1,33 @@
+{
+  "name": "@juice-js/notifications",
+  "version": "1.0.0",
+  "description": "The person's notification inbox, preferences and contact points for Juice.Notifications: a bell, an inbox panel kept live over SignalR, and settings pages",
+  "author": "jack@creatorflow.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creatorflow-io/juice-layout/issues"
+  },
+  "homepage": "https://github.com/creatorflow-io/juice-layout#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creatorflow-io/juice-layout.git"
+  },
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/material": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "@microsoft/signalr": "^10.0.0",
+    "@ngx-translate/core": "^18.0.0",
+    "angular-oauth2-oidc": "^22.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
