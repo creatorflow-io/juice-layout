@@ -1,0 +1,75 @@
+<section class="juice-notification-settings">
+  <h2>{{ 'Notification preferences' | translate }}</h2>
+  <p>{{ 'Choose how you hear about each category. The most specific choice wins; * means every category or channel. Required notifications still reach your inbox.' | translate }}</p>
+
+  @if (error()) { <p class="error" role="alert">{{ error()! | translate }}</p> }
+  @if (message()) { <p class="message" role="status">{{ message()! | translate }}</p> }
+
+  <table class="preferences">
+    <thead>
+      <tr><th>{{ 'Category' | translate }}</th><th>{{ 'Channel' | translate }}</th><th>{{ 'Mode' | translate }}</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track $index; let i = $index) {
+        <tr>
+          <td>
+            <mat-form-field subscriptSizing="dynamic">
+              <input matInput [ngModel]="row.category" (ngModelChange)="update(i, { category: $event })" [attr.aria-label]="'Category' | translate" required>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-select [ngModel]="row.channel" (ngModelChange)="update(i, { channel: $event })" [attr.aria-label]="'Channel' | translate">
+                @for (channel of channels; track channel) { <mat-option [value]="channel">{{ channel }}</mat-option> }
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-select [ngModel]="row.mode" (ngModelChange)="update(i, { mode: $event })" [attr.aria-label]="'Mode' | translate">
+                @for (mode of modes; track mode) { <mat-option [value]="mode">{{ mode | translate }}</mat-option> }
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <button mat-icon-button type="button" (click)="remove(i)" [attr.aria-label]="'Remove' | translate"><mat-icon>delete</mat-icon></button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="4">{{ 'Everything is on.' | translate }}</td></tr>
+      }
+    </tbody>
+  </table>
+  <div class="buttons">
+    <button mat-button type="button" (click)="add()" [disabled]="busy()"><mat-icon>add</mat-icon> {{ 'Add a preference' | translate }}</button>
+    <button mat-flat-button type="button" (click)="savePreferences()" [disabled]="busy()">{{ 'Save preferences' | translate }}</button>
+  </div>
+
+  <h3>{{ 'Quiet hours' | translate }}</h3>
+  <p>{{ 'During quiet hours email and other personal channels wait until they end; your inbox still gets everything.' | translate }}</p>
+  <mat-slide-toggle [checked]="quietOn()" (change)="quietOn.set($event.checked)">{{ 'Use quiet hours' | translate }}</mat-slide-toggle>
+  @if (quietOn() && quiet(); as q) {
+    <div class="quiet">
+      <mat-form-field>
+        <mat-label>{{ 'From' | translate }}</mat-label>
+        <input matInput type="time" [ngModel]="q.start" (ngModelChange)="setQuiet({ start: $event })" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'Until' | translate }}</mat-label>
+        <input matInput type="time" [ngModel]="q.end" (ngModelChange)="setQuiet({ end: $event })" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'Time zone' | translate }}</mat-label>
+        <input matInput [ngModel]="q.timeZone" (ngModelChange)="setQuiet({ timeZone: $event || null })" placeholder="Europe/Paris">
+      </mat-form-field>
+      <div class="days" role="group" [attr.aria-label]="'Days' | translate">
+        @for (day of days; track day) {
+          <mat-checkbox [checked]="quietDay(day)" (change)="toggleDay(day, $event.checked)">{{ day | translate }}</mat-checkbox>
+        }
+      </div>
+    </div>
+  }
+  <div class="buttons">
+    <button mat-flat-button type="button" (click)="saveQuietHours()" [disabled]="busy()">{{ 'Save quiet hours' | translate }}</button>
+  </div>
+</section>
