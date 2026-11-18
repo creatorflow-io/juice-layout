@@ -14,6 +14,7 @@ import { SearchBarComponent } from '../components/search-bar/search-bar.componen
 import { DarkModeComponent } from '../components/dark-mode/dark-mode.component';
 import { UserProfileComponent } from '../components/user-profile/user-profile.component';
 import { NavMenuComponent } from '../components/nav-menu/nav-menu.component';
+import { PageSwitcherComponent } from '../components/page-switcher/page-switcher.component';
 import { IS_PRODUCTION } from '../layout.config';
 import { SearchService } from '../services/search.service';
 import { SearchablePage } from '../services/searchable-page';
@@ -32,6 +33,7 @@ describe('PageComponent', () => {
         DarkModeComponent,
         UserProfileComponent,
         NavMenuComponent,
+        PageSwitcherComponent,
         PageComponent
     ],
     imports: [MatToolbarModule,

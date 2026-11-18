@@ -4,6 +4,7 @@ import { MenuItem, MenuService, TenantService } from '@juice-js/core';
 import { LayoutService } from '../../layout.service';
 import { TooltipPosition } from '../tooltip/tooltip.directive';
 import { ActivatedRoute } from '@angular/router';
+import { PageSwitcherService } from '../../services/page-switcher.service';
 
 @Component({
     selector: 'juice-nav-menu',
@@ -16,6 +17,8 @@ export class NavMenuComponent {
   isExpanded = false;
   isMobile = false;
   items: MenuItem[] = [];
+  /** The items the side menu shows: all but those marked `inMenu: false` (the page switcher still offers them). */
+  menuItems: MenuItem[] = [];
   TooltipPosition: typeof TooltipPosition = TooltipPosition;
 
   settingUrl: string|null|undefined;
@@ -24,7 +27,8 @@ export class NavMenuComponent {
     public layout: LayoutService, private tenantService: TenantService,
     private route: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private switcher: PageSwitcherService) {
     
     if(route.snapshot.data['settingUrl']){
       this.settingUrl = route.snapshot.data['settingUrl'];
@@ -48,9 +52,17 @@ export class NavMenuComponent {
     this.service.getMenu().subscribe(items => {
       console.debug('Menu items', JSON.parse(JSON.stringify(items)));
       this.items = items;
+      // A group shows while it has pages to show; one whose pages are all kept out shows as its own page, if it has one.
+      this.groups = new Set(items.filter(i => i.menuChildren().length > 0));
+      this.menuItems = items.filter(i => i.inMenu !== false && (this.groups.has(i) || i.hasOwnPage()));
+      // The switcher offers the same items: one load, renewed whenever the shell (and this menu) is built again.
+      this.switcher.setItems(items);
       this.cdr.markForCheck();
     });
   }
+
+  /** The items that show as a group: they have pages the side menu shows. */
+  groups = new Set<MenuItem>();
 
   toggle() {
     this.layout.toggleMenu();

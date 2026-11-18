@@ -1,14 +1,13 @@
 <mat-nav-list class="menu-scroll" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
-  @for (item of items; track item) {
-    @if (!item.children || item.children.length==0) {
+  @for (item of menuItems; track item) {
+    @if (!groups.has(item)) {
       <mat-list-item
         routerLink="{{ item.routerLink }}" [routerLinkActive]="['active']"
         [routerLinkActiveOptions]="{exact:true}">
         <mat-icon matListItemIcon color="accent">{{ item.icon }}</mat-icon>
         <span matListItemTitle  style="margin-left: 4px;"> {{ item.label }}</span>
       </mat-list-item>
-    }
-    @if (item.children && item.children.length>0) {
+    } @else {
       <juice-expandable-menu
       [item]="item" [isExpanded]="isExpanded"></juice-expandable-menu>
     }

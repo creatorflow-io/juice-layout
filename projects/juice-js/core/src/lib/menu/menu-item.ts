@@ -14,7 +14,16 @@ export class MenuItem {
     replaceChildRouterLink: boolean;
     loaded: boolean = false;
     canDisplay: any[] | boolean;
-    
+    /** False keeps the item out of the side menu; it still reaches the page switcher. */
+    inMenu: boolean;
+    /** Go-to keys, such as `g s`. */
+    shortcut?: string;
+    /**
+     * Whether it was made as a group (it had children, or children to load), even if none is left for this user: a
+     * group without a link has no page of its own, also once empty.
+     */
+    readonly grouping: boolean;
+
     constructor(menu: Menu){
         this.id = menu.id;
         this.label = menu.label;
@@ -27,6 +36,9 @@ export class MenuItem {
         this.loaded = false;
         this.rawRouterLink = menu.routerLink;
         this.canDisplay = menu.canDisplay??[];
+        this.inMenu = menu.inMenu ?? true;
+        this.shortcut = menu.shortcut;
+        this.grouping = this.children.length > 0 || !!menu.loadChildren;
     }
 
     static fromRoute(route: Route): MenuItem{
@@ -39,7 +51,9 @@ export class MenuItem {
             children: route.children?.filter(isMenu).map(r => MenuItem.fromRoute(r))??[],
             loadChildren: route.loadChildren,
             replaceChildRouterLink: true,
-            canDisplay: (route.data!['menuDisplay'] as boolean | any[])
+            canDisplay: (route.data!['menuDisplay'] as boolean | any[]),
+            inMenu: route.data!['menuInMenu'],
+            shortcut: route.data!['menuShortcut']
         });
         return menu;
     }
@@ -48,15 +62,35 @@ export class MenuItem {
         return this.children.length > 0;
     }
 
+    /** The children the side menu shows: all but those marked `inMenu: false`. */
+    menuChildren(): MenuItem[]{
+        return (this.children ?? []).filter(c => c.inMenu !== false);
+    }
+
+    /**
+     * Whether the item has a page of its own: a leaf does; a group does when it has a link that none of its children
+     * stands for (a group linking to its first child's page has none of its own).
+     */
+    hasOwnPage(): boolean{
+        if(!this.hasChildren()){
+            // A leaf is a page ('' is the home page); a group left without children is one only if it has a link.
+            return !this.grouping || !!this.rawRouterLink;
+        }
+        const own = this.routerLink?.trimEndSlash();
+        return !!this.routerLink && !this.children.some(c => c.routerLink?.trimEndSlash() === own);
+    }
+
     injectTenant(tenant: string|null|undefined){
         this.children?.forEach(item => {
-            if(item.hasChildren()){
+            if(item.grouping){
                 item.injectTenant(tenant);
             }else{
                 item.routerLink = item.rawRouterLink.injectTenant(tenant);
             }
         });
-        this.routerLink = this.rawRouterLink.injectTenant(tenant);
+        // A group without a link stays without one ('' would otherwise become '/', the home page); '/' is a link.
+        this.routerLink = this.grouping && !this.rawRouterLink
+            ? '' : this.rawRouterLink.injectTenant(tenant);
     }
 }
 
@@ -69,7 +103,14 @@ export interface Menu {
     children?: Menus,
     loadChildren?: any,
     replaceChildRouterLink?: boolean,
-    canDisplay?: any[] | boolean
+    canDisplay?: any[] | boolean,
+    /**
+     * False keeps the item out of the side menu but in the page switcher (Ctrl+K): a page reached from other pages.
+     * Default true.
+     */
+    inMenu?: boolean,
+    /** Go-to keys the shell binds to the item: `g` then one letter, such as `g s`. Shown in the page switcher. */
+    shortcut?: string
 }
 
 export type Menus = Menu[];

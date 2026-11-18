@@ -14,5 +14,7 @@ export * from './lib/components/tooltip/tooltip.module';
 export * from './lib/dev.guard';
 export * from './lib/services/search.service';
 export * from './lib/services/searchable-page';
+export * from './lib/services/page-switcher.service';
+export * from './lib/components/page-switcher/page-switcher.component';
 export * from './lib/components/user-profile/profile-dialog.service';
 export * from './lib/components/user-profile-dialog/user-profile-dialog.module';

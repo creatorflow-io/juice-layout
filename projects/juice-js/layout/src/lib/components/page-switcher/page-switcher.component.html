@@ -1,0 +1,30 @@
+<div class="switcher" (keydown)="onKeydown($event)">
+  <div class="field">
+    <mat-icon aria-hidden="true">search</mat-icon>
+    <input type="text" role="combobox" aria-autocomplete="list" aria-expanded="true"
+      aria-controls="juice-page-switcher-list" autocomplete="off" spellcheck="false"
+      [attr.aria-activedescendant]="results()[selected()] ? optionId(selected()) : null"
+      [placeholder]="'Go to page…' | translate" [value]="query()"
+      (input)="onInput($any($event.target).value)">
+    <kbd class="hint">Esc</kbd>
+  </div>
+  <ul #list id="juice-page-switcher-list" role="listbox" [attr.aria-label]="'Pages' | translate">
+    @for (page of results(); track page.id + page.routerLink; let i = $index) {
+      <li role="option" [id]="optionId(i)" [attr.aria-selected]="i === selected()" [class.selected]="i === selected()"
+        (mousemove)="selected.set(i)" (mousedown)="$event.preventDefault()" (click)="service.go(page)">
+        <mat-icon aria-hidden="true">{{ page.icon }}</mat-icon>
+        <span class="label">{{ page.label }}</span>
+        @if (page.group) {
+          <span class="group">{{ page.group }}</span>
+        }
+        @if (page.shortcut) {
+          <span class="keys" [attr.aria-label]="('Shortcut' | translate) + ' ' + page.shortcut">
+            @for (key of keys(page.shortcut); track $index) { <kbd>{{ key }}</kbd> }
+          </span>
+        }
+      </li>
+    } @empty {
+      <li class="empty" role="presentation">{{ 'No pages match' | translate }}</li>
+    }
+  </ul>
+</div>
