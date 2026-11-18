@@ -29,8 +29,10 @@ export class ContactPointsComponent implements OnInit {
   private readonly config = inject(NOTIFICATIONS_CONFIG);
 
   readonly points = signal<ContactPoint[]>([]);
-  readonly emails = computed(() => this.points().filter((p) => p.channel === 'email'));
-  readonly accounts = computed(() => this.points().filter((p) => p.channel !== 'email'));
+  readonly emails = computed(() => this.points().filter((p) => p.channel === 'email' || p.channel === 'sms'));
+  readonly accounts = computed(() => this.points().filter((p) => p.channel !== 'email' && p.channel !== 'sms'));
+  readonly phoneNumbers = this.config.phoneNumbers ?? false;
+  readonly phone = signal('');
   readonly linkChannels = this.config.linkChannels ?? [];
   /** The code being shown, for the channel it links. */
   readonly link = signal<LinkCode | null>(null);
@@ -46,14 +48,15 @@ export class ContactPointsComponent implements OnInit {
     await this.run(() => this.load());
   }
 
-  async add(): Promise<void> {
-    const address = this.address().trim();
+  async add(channel: 'email' | 'sms' = 'email'): Promise<void> {
+    const field = channel === 'sms' ? this.phone : this.address;
+    const address = field().trim();
     if (!address) {
       return;
     }
     await this.run(async () => {
-      const point = await firstValueFrom(this.api.addContactPoint('email', address));
-      this.address.set('');
+      const point = await firstValueFrom(this.api.addContactPoint(channel, address));
+      field.set('');
       await this.load();
       await this.sendCode(point, false);
     });
