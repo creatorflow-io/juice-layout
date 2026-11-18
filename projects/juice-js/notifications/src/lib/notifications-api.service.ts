@@ -4,7 +4,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  ContactPoint, Device, LinkCode, RegisterDevice, InboxCounts, InboxItem, InboxQuery, Me, Preference, QuietHours, VerificationSent,
+  ContactPoint, Device, LinkCode, RegisterDevice, TemplatePreview, TenantTemplate, TenantType, InboxCounts, InboxItem, InboxQuery, Me, Preference, QuietHours, VerificationSent,
 } from './models';
 import { NOTIFICATIONS_CONFIG, NotificationsConfig, tokenClaim } from './notifications.config';
 
@@ -152,6 +152,36 @@ export class NotificationsApi {
 
   removeDevice(id: string): Observable<void> {
     return this.me((base) => this.http.delete<void>(`${base}/devices/${encodeURIComponent(id)}`));
+  }
+
+  /** The types the tenant receives (tenant admins), for the template editor. */
+  tenantTypes(): Observable<TenantType[]> {
+    return this.tenant((base) => this.http.get<TenantType[]>(`${base}/types`));
+  }
+
+  template(type: string, channel: string): Observable<TenantTemplate> {
+    return this.tenant((base) => this.http.get<TenantTemplate>(`${base}/types/${encodeURIComponent(type)}/templates/${encodeURIComponent(channel)}`));
+  }
+
+  /** Saves the tenant's own template for a type and channel, over the application's. */
+  saveTemplate(type: string, channel: string, body: string): Observable<TenantTemplate> {
+    return this.tenant((base) => this.http.put<TenantTemplate>(`${base}/types/${encodeURIComponent(type)}/templates/${encodeURIComponent(channel)}`, { body }));
+  }
+
+  /** Removes the tenant's template: the application's is used again. */
+  removeTemplate(type: string, channel: string): Observable<void> {
+    return this.tenant((base) => this.http.delete<void>(`${base}/types/${encodeURIComponent(type)}/templates/${encodeURIComponent(channel)}`));
+  }
+
+  /** Renders a template (the one in effect, without `body`) with `data` (a sample from the type's schema, without it). Nothing is stored. */
+  previewTemplate(type: string, channel: string, body: string | null, data: unknown | null): Observable<TemplatePreview> {
+    return this.tenant((base) => this.http.post<TemplatePreview>(`${base}/templates/preview`, { type, channel, body, data }));
+  }
+
+  /** A call under `…/tenants/{tenantId}` (the tenant's admins), or {@link NoTenantError} when there's no tenant. */
+  private tenant<T>(call: (base: string) => Observable<T>): Observable<T> {
+    const tenant = this.tenantId();
+    return tenant ? call(`${this.config.apiUrl}/api/v1/tenants/${encodeURIComponent(tenant)}`) : throwError(() => new NoTenantError());
   }
 
   /** A call under `…/tenants/{tenantId}/me`, or {@link NoTenantError} when there's no tenant. */

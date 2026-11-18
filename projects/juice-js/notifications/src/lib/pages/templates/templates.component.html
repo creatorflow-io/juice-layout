@@ -1,0 +1,59 @@
+<section class="juice-notification-settings juice-notification-templates">
+  <h2>{{ 'Notification templates' | translate }}</h2>
+  <p>{{ "Change what a notification says for your organization. Your template is used instead of the application's until you remove it." | translate }}</p>
+
+  @if (error()) { <p class="error" role="alert">{{ error()! | translate }}</p> }
+
+  <div class="template-pick">
+    <mat-form-field>
+      <mat-label>{{ 'Type' | translate }}</mat-label>
+      <mat-select [value]="type()" (selectionChange)="pickType($event.value)">
+        @for (t of types(); track t.key) {
+          <mat-option [value]="t.key">{{ t.name }} ({{ t.key }} v{{ t.version }})</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'Channel' | translate }}</mat-label>
+      <mat-select [value]="channel()" (selectionChange)="pickChannel($event.value)" [disabled]="!type()">
+        @for (c of channels(); track c.channel) {
+          <mat-option [value]="c.channel">{{ c.channel }}@if (c.overridden) { ({{ 'yours' | translate }}) }</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (template(); as t) {
+    <div class="template-edit">
+      <div class="template-source">
+        <mat-form-field class="template-body">
+          <mat-label>{{ (t.tenant ? "Your template" : "The application's template (edit to make it yours)") | translate }}</mat-label>
+          <textarea matInput rows="14" spellcheck="false" [ngModel]="body()" (ngModelChange)="body.set($event); saved.set(false)"></textarea>
+          <mat-hint>Scriban: &#123;&#123; data.field &#125;&#125;. {{ "A first line Subject: (email) or Title: (inbox, chat, push) sets the heading." | translate }}</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="template-data">
+          <mat-label>{{ 'Sample data (JSON)' | translate }}</mat-label>
+          <textarea matInput rows="8" spellcheck="false" [ngModel]="data()" (ngModelChange)="data.set($event)"></textarea>
+        </mat-form-field>
+        <div class="template-actions">
+          <button mat-button type="button" (click)="previewNow()" [disabled]="busy()">{{ 'Preview' | translate }}</button>
+          <button mat-flat-button type="button" (click)="save()" [disabled]="busy() || !body().trim()">{{ 'Save' | translate }}</button>
+          @if (t.tenant) {
+            <button mat-button type="button" (click)="remove()" [disabled]="busy()">{{ "Use the application's template" | translate }}</button>
+          }
+          @if (saved()) { <span role="status">{{ 'Saved' | translate }}</span> }
+        </div>
+      </div>
+      <div class="template-preview" aria-live="polite">
+        <h3>{{ 'Preview' | translate }}</h3>
+        @if (preview(); as p) {
+          @if (p.error) {
+            <p class="error">{{ p.error }}</p>
+          } @else {
+            <pre>{{ p.content | json }}</pre>
+          }
+        }
+      </div>
+    </div>
+  }
+</section>
