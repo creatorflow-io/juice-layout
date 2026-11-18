@@ -13,6 +13,7 @@ export class LayoutConfig{
     defaultMenuOpen: boolean = false;
     settingUrl: string | undefined;
     userImageUrl: string | undefined;
+    pageSwitcher: boolean = true;
 
     constructor(options?: ILayoutConfig){
         if(options){
@@ -30,6 +31,11 @@ export interface ILayoutConfig{
     defaultMenuOpen?: boolean;
     settingUrl?: string;
     userImageUrl?: string;
+    /**
+     * The page switcher (Ctrl+K or ⌘K, and a toolbar button) and the menu's go-to keys (`shortcut` on a menu item).
+     * Default true.
+     */
+    pageSwitcher?: boolean;
 }
 
 export const IS_PRODUCTION = new InjectionToken<boolean>('production');

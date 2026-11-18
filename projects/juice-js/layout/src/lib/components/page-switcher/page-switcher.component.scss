@@ -1,0 +1,69 @@
+// The dialog brings the surface; colours here come from the theme's --jps-* (layout-component-themes), else Material's
+// system colours, else light ones.
+:host {
+    display: block;
+}
+
+.switcher {
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+    color: var(--jps-text, var(--mat-sys-on-surface, rgba(0, 0, 0, .87)));
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--jps-line, var(--mat-sys-outline-variant, rgba(0, 0, 0, .12)));
+    mat-icon { color: var(--jps-muted, var(--mat-sys-on-surface-variant, rgba(0, 0, 0, .6))); }
+    input {
+        flex: 1;
+        min-width: 0;
+        height: 52px;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: 1rem;
+    }
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    overflow-y: auto;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 40px;
+    padding: 0 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    mat-icon { color: var(--jps-muted, var(--mat-sys-on-surface-variant, rgba(0, 0, 0, .6))); flex: none; }
+    .label { flex: none; }
+    .group { color: var(--jps-muted, var(--mat-sys-on-surface-variant, rgba(0, 0, 0, .6))); font-size: .85em; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .keys { margin-left: auto; display: flex; gap: 4px; flex: none; }
+    &.selected { background: var(--jps-selected, var(--mat-sys-secondary-container, rgba(0, 0, 0, .06))); }
+    &.empty { cursor: default; color: var(--jps-muted, var(--mat-sys-on-surface-variant, rgba(0, 0, 0, .6))); justify-content: center; }
+}
+
+kbd {
+    display: inline-block;
+    min-width: 1.4em;
+    padding: 1px 6px;
+    border: 1px solid var(--jps-line, var(--mat-sys-outline-variant, rgba(0, 0, 0, .12)));
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font: 500 .75rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-align: center;
+    color: var(--jps-muted, var(--mat-sys-on-surface-variant, rgba(0, 0, 0, .6)));
+}
+
+.hint { flex: none; }

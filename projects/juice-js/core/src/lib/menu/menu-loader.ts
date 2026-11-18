@@ -41,6 +41,10 @@ async function loadChildrenInternal(menu: MenuItem, parentInjector: Injector, te
   for(let child of children){
     if(hasChildren(child)){
       var sub = await loadChildrenInternal(child, parentInjector, tenant);
+      // The nested group goes away and its pages take its place: they keep it out of the side menu if it was.
+      if(child.inMenu === false){
+        sub.forEach(s => s.inMenu = false);
+      }
       if(sub.length > 0){
         result = result.concat(sub);
       }

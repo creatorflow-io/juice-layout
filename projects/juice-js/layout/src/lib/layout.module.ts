@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { ILayoutConfig, IS_PRODUCTION, LayoutConfig } from './layout.config';
 import { LayoutService } from './layout.service';
@@ -22,6 +23,7 @@ import { ExpandableMenuComponent } from './components/expandable-menu/expandable
 import { PageNotfoundComponent } from './pages/page-notfound/page-notfound.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { PageSwitcherComponent } from './components/page-switcher/page-switcher.component';
 
 const routes: Routes = [ 
   
@@ -36,6 +38,7 @@ const routes: Routes = [
     PageNotfoundComponent,
     SearchBarComponent,
     UserProfileComponent,
+    PageSwitcherComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -50,7 +53,8 @@ const routes: Routes = [
     MatListModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   exports: [
     PageComponent,

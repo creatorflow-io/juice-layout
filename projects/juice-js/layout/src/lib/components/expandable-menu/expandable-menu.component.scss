@@ -1,6 +1,19 @@
 :host ::ng-deep {
+    // A group reads as part of the list, not as a card: no shadow, no background, no gap when open.
+    // Material's own shadow rule is `.mat-expansion-panel:not([class*=mat-elevation-z])`: match its weight.
+    .mat-expansion-panel, .mat-expansion-panel:not([class*=mat-elevation-z]){
+        box-shadow: none;
+        background: transparent;
+        border-radius: 0;
+        color: inherit;
+    }
+    .mat-expansion-panel.mat-expanded, .mat-expansion-panel-spacing{
+        margin: 0;
+    }
+
     .mat-expansion-panel-header{
         padding: 0;
+        background: transparent;
         .mdc-list-item{
             padding: 0;
         }
@@ -18,4 +31,9 @@
     .mat-content.mat-content-hide-toggle{
         margin-right: 0;
     }
+}
+
+// With labels shown, a group's pages sit one step in from its header.
+:host.menu-expanded ::ng-deep .mat-expansion-panel-body .mat-mdc-list-item{
+    padding-left: 32px;
 }

@@ -105,4 +105,13 @@
         color: var(--mat-menu-item-label-text-color, #{map.get($foreground-palette, text)});
     }
     /** Menu panel */
+
+    /** Page switcher */
+    juice-page-switcher {
+        --jps-text: #{map.get($foreground-palette, text)};
+        --jps-muted: #{map.get($foreground-palette, secondary-text)};
+        --jps-line: #{map.get($foreground-palette, divider)};
+        --jps-selected: #{map.get($background-palette, hover)};
+    }
+    /** Page switcher */
 }
