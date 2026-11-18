@@ -52,6 +52,9 @@ Standalone apps use `provideNotifications({ apiUrl })` and put `<juice-notificat
 `…/notifications/preferences` (a mode per category and channel, and quiet hours) and `…/notifications/contact-points` (add an email address,
 or a phone number with `phoneNumbers`, receive a code, verify it; link chat accounts with `linkChannels`).
 
+`…/notifications/templates` is for the tenant's admins: pick a type and a channel, edit its text (Scriban), preview it with sample data, save
+it as the tenant's own or go back to the application's.
+
 ## Web Push
 
 Copy the service worker to the app's root (`angular.json`, the build's `assets`):
