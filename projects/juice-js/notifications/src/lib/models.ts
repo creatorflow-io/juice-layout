@@ -146,6 +146,35 @@ export interface LinkCode {
   expiresAt: string;
 }
 
+/** A type the tenant receives, at its latest version, with each channel's templates (the application's, the tenant's own). */
+export interface TenantType {
+  key: string;
+  name: string;
+  version: number;
+  application: string;
+  channels: { channel: string; declared: boolean; overridden: boolean }[];
+}
+
+/** A channel's templates for a type: the application's, and the tenant's own (null without one). */
+export interface TenantTemplate {
+  type: string;
+  typeVersion: number;
+  channel: string;
+  locale: string;
+  application: string | null;
+  tenant: string | null;
+  tenantVersion: number | null;
+  updatedAt: string | null;
+}
+
+/** A template rendered: the channel's content (email: subject, text, html), or why it failed; and the data it used. */
+export interface TemplatePreview {
+  channel: string;
+  content: Record<string, unknown> | null;
+  error: string | null;
+  data: Record<string, unknown>;
+}
+
 /** A device registered for push; its token is never returned. */
 export interface Device {
   id: string;
