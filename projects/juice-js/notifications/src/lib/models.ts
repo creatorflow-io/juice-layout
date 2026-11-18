@@ -139,6 +139,13 @@ export interface ContactPoint {
   createdAt: string;
 }
 
+/** A code to send the tenant's bot from the chat account to link (`ABCD-EFGH`), valid until `expiresAt` and once. */
+export interface LinkCode {
+  channel: string;
+  code: string;
+  expiresAt: string;
+}
+
 /** A verification code is on its way, valid until `expiresAt`. */
 export interface VerificationSent {
   expiresAt: string;
