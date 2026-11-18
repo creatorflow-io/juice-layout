@@ -123,6 +123,26 @@ describe('ContactPointsComponent', () => {
     http.verify();
   });
 
+  it('adds a phone number for SMS when the tenant sends SMS', async () => {
+    const { fixture, page, http } = setup(ContactPointsComponent, { phoneNumbers: true });
+    fixture.detectChanges();
+    http.expectOne(`${ME}/contact-points`).flush([]);
+    await settled();
+    page.phone.set(' +84 90 123 4567 ');
+    const adding = page.add('sms');
+    const post = http.expectOne((r) => r.url === `${ME}/contact-points` && r.method === 'POST');
+    expect(post.request.body).toEqual({ channel: 'sms', address: '+84 90 123 4567' });
+    post.flush(point({ id: 'p3', channel: 'sms', address: '+84901234567' }));
+    await settled();
+    http.expectOne((r) => r.url === `${ME}/contact-points` && r.method === 'GET').flush([point({ id: 'p3', channel: 'sms', address: '+84901234567' })]);
+    await settled();
+    http.expectOne(`${ME}/contact-points/p3/verification`).flush({ expiresAt: '2026-11-17T08:15:00Z' });
+    await adding;
+    expect(page.emails().map((p) => p.id)).toEqual(['p3']);
+    expect(page.phone()).toBe('');
+    http.verify();
+  });
+
   it('lists chat accounts apart and links one with a code sent to the bot', async () => {
     const { fixture, page, http } = setup(ContactPointsComponent, { linkChannels: ['telegram'], telegramBot: 'juice_bot' });
     fixture.detectChanges();
