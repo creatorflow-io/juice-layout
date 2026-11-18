@@ -4,15 +4,21 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ContactPoint, Me } from '../models';
 import { FakeHub, ME, TENANT, jwt, providers } from '../testing.spec-helpers';
+import { NOTIFICATIONS_CONFIG } from '../notifications.config';
 import { ContactPointsComponent } from './contact-points/contact-points.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 
 const settled = () => new Promise((resolve) => setTimeout(resolve));
 
-function setup<T>(component: Type<T>) {
+function setup<T>(component: Type<T>, config: Record<string, unknown> = {}) {
+  // The library's configuration, with the test's own settings over it.
+  const base = providers(new FakeHub(), jwt({ platform_tenant: TENANT })).map((p) => {
+    const provider = p as { provide?: unknown; useValue?: object };
+    return provider.provide === NOTIFICATIONS_CONFIG ? { provide: NOTIFICATIONS_CONFIG, useValue: { ...provider.useValue, ...config } } : p;
+  });
   TestBed.configureTestingModule({
     imports: [component],
-    providers: [...providers(new FakeHub(), jwt({ platform_tenant: TENANT })), provideNoopAnimations()],
+    providers: [...base, provideNoopAnimations()],
   });
   const fixture = TestBed.createComponent(component);
   return { fixture, page: fixture.componentInstance, http: TestBed.inject(HttpTestingController) };
@@ -114,6 +120,31 @@ describe('ContactPointsComponent', () => {
     await verifying;
     expect(page.points()[0].verified).toBeTrue();
     expect(page.sent()['p1']).toBeUndefined();
+    http.verify();
+  });
+
+  it('lists chat accounts apart and links one with a code sent to the bot', async () => {
+    const { fixture, page, http } = setup(ContactPointsComponent, { linkChannels: ['telegram'], telegramBot: 'juice_bot' });
+    fixture.detectChanges();
+    http.expectOne(`${ME}/contact-points`).flush([point()]);
+    await settled();
+    expect(page.emails().length).toBe(1);
+    expect(page.accounts().length).toBe(0);
+
+    const linking = page.linkAccount('telegram');
+    const post = http.expectOne(`${ME}/links`);
+    expect(post.request.body).toEqual({ channel: 'telegram' });
+    post.flush({ channel: 'telegram', code: 'ABCD-EFGH', expiresAt: '2026-11-18T09:15:00Z' });
+    await linking;
+    expect(page.telegramLink(page.link()!)).toBe('https://t.me/juice_bot?start=ABCDEFGH');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('/start ABCD-EFGH');
+
+    const done = page.linked();
+    http.expectOne(`${ME}/contact-points`).flush([point(), point({ id: 'p2', channel: 'telegram', address: '…6789', verified: true, verifiedBy: 'link' })]);
+    await done;
+    expect(page.accounts().map((p) => p.id)).toEqual(['p2']);
+    expect(page.link()).toBeNull();
     http.verify();
   });
 });

@@ -5,7 +5,7 @@
   @if (error()) { <p class="error" role="alert">{{ error()! | translate }}</p> }
 
   <ul class="contact-points" role="list">
-    @for (point of points(); track point.id) {
+    @for (point of emails(); track point.id) {
       <li class="contact-point">
         <span class="contact-point-address">{{ point.address }}</span>
         @if (point.health === 'failed') {
@@ -44,3 +44,47 @@
     <button mat-flat-button type="submit" [disabled]="busy() || !address().trim()">{{ 'Add' | translate }}</button>
   </form>
 </section>
+
+@if (linkChannels.length > 0) {
+  <section class="juice-notification-settings juice-chat-accounts">
+    <h2>{{ 'Chat accounts' | translate }}</h2>
+    <p>{{ 'Link an account to get notifications there. You prove it is yours by sending a code to the bot from it.' | translate }}</p>
+    <ul class="contact-points" role="list">
+      @for (point of accounts(); track point.id) {
+        <li class="contact-point">
+          <span class="contact-point-channel">{{ point.channel }}</span>
+          <span class="contact-point-address">{{ point.address }}</span>
+          @if (point.health === 'failed') {
+            <span class="contact-point-state failed">{{ 'Not delivering: link it again' | translate }}</span>
+          } @else {
+            <span class="contact-point-state verified"><mat-icon inline>link</mat-icon> {{ 'Linked' | translate }}</span>
+          }
+          <button mat-icon-button type="button" (click)="remove(point)" [disabled]="busy()" [attr.aria-label]="'Remove' | translate"><mat-icon>delete</mat-icon></button>
+        </li>
+      } @empty {
+        <li>{{ 'No chat accounts yet.' | translate }}</li>
+      }
+    </ul>
+    @if (link(); as code) {
+      <div class="link-code" role="status">
+        <p>
+          @if (code.channel === 'telegram') {
+            {{ 'Send this to the bot in Telegram:' | translate }} <code>/start {{ code.code }}</code>
+          } @else {
+            {{ 'Send this code to the app in a direct message:' | translate }} <code>{{ code.code }}</code>
+          }
+        </p>
+        @if (telegramLink(code); as url) {
+          <a mat-stroked-button [href]="url" target="_blank" rel="noopener">{{ 'Open Telegram' | translate }}</a>
+        }
+        <p class="hint">{{ 'Valid until' | translate }} {{ code.expiresAt | date: 'shortTime' }}</p>
+        <button mat-flat-button type="button" (click)="linked()" [disabled]="busy()">{{ 'I sent it' | translate }}</button>
+      </div>
+    }
+    <div class="link-actions">
+      @for (channel of linkChannels; track channel) {
+        <button mat-button type="button" (click)="linkAccount(channel)" [disabled]="busy()">{{ 'Link' | translate }} {{ channel }}</button>
+      }
+    </div>
+  </section>
+}

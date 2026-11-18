@@ -18,6 +18,13 @@ export interface NotificationsConfig {
   accessToken?: () => string | null | undefined;
   /** Items per page in the panel (at most 100). */
   pageSize?: number;
+  /**
+   * The chat accounts people may link on the contact points page, as the tenant's integrations offer them: `['slack', 'telegram']`. Left out:
+   * none (email only).
+   */
+  linkChannels?: string[];
+  /** The Telegram bot's username, without `@`: the link code then opens the bot with it (`https://t.me/{bot}?start={code}`). */
+  telegramBot?: string;
 }
 
 export const NOTIFICATIONS_CONFIG = new InjectionToken<NotificationsConfig>('NOTIFICATIONS_CONFIG');

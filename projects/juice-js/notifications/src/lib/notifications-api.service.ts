@@ -4,7 +4,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  ContactPoint, InboxCounts, InboxItem, InboxQuery, Me, Preference, QuietHours, VerificationSent,
+  ContactPoint, LinkCode, InboxCounts, InboxItem, InboxQuery, Me, Preference, QuietHours, VerificationSent,
 } from './models';
 import { NOTIFICATIONS_CONFIG, NotificationsConfig, tokenClaim } from './notifications.config';
 
@@ -134,6 +134,11 @@ export class NotificationsApi {
 
   verify(id: string, code: string): Observable<ContactPoint> {
     return this.me((base) => this.http.post<ContactPoint>(`${base}/contact-points/${encodeURIComponent(id)}/verify`, { code }));
+  }
+
+  /** A code to link a chat account (`slack`, `telegram`): the person sends it to the tenant's bot from that account. */
+  linkCode(channel: string): Observable<LinkCode> {
+    return this.me((base) => this.http.post<LinkCode>(`${base}/links`, { channel }));
   }
 
   /** A call under `…/tenants/{tenantId}/me`, or {@link NoTenantError} when there's no tenant. */
