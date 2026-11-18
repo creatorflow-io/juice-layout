@@ -146,6 +146,25 @@ export interface LinkCode {
   expiresAt: string;
 }
 
+/** A device registered for push; its token is never returned. */
+export interface Device {
+  id: string;
+  platform: 'fcm' | 'apns' | 'webpush';
+  appId: string;
+  locale: string | null;
+  createdAt: string;
+  lastSeenAt: string;
+}
+
+/** A registration: a token (FCM, APNs) or a Web Push subscription. Registering again refreshes it. */
+export interface RegisterDevice {
+  platform: 'fcm' | 'apns' | 'webpush';
+  appId: string;
+  token?: string;
+  subscription?: { endpoint: string; p256dh: string; auth: string };
+  locale?: string | null;
+}
+
 /** A verification code is on its way, valid until `expiresAt`. */
 export interface VerificationSent {
   expiresAt: string;

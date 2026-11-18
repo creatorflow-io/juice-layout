@@ -4,7 +4,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  ContactPoint, LinkCode, InboxCounts, InboxItem, InboxQuery, Me, Preference, QuietHours, VerificationSent,
+  ContactPoint, Device, LinkCode, RegisterDevice, InboxCounts, InboxItem, InboxQuery, Me, Preference, QuietHours, VerificationSent,
 } from './models';
 import { NOTIFICATIONS_CONFIG, NotificationsConfig, tokenClaim } from './notifications.config';
 
@@ -139,6 +139,19 @@ export class NotificationsApi {
   /** A code to link a chat account (`slack`, `telegram`): the person sends it to the tenant's bot from that account. */
   linkCode(channel: string): Observable<LinkCode> {
     return this.me((base) => this.http.post<LinkCode>(`${base}/links`, { channel }));
+  }
+
+  devices(): Observable<Device[]> {
+    return this.me((base) => this.http.get<Device[]>(`${base}/devices`));
+  }
+
+  /** Registers this device for push (or refreshes its registration); see `enableWebPush` for browsers. */
+  registerDevice(device: RegisterDevice): Observable<Device> {
+    return this.me((base) => this.http.post<Device>(`${base}/devices`, device));
+  }
+
+  removeDevice(id: string): Observable<void> {
+    return this.me((base) => this.http.delete<void>(`${base}/devices/${encodeURIComponent(id)}`));
   }
 
   /** A call under `…/tenants/{tenantId}/me`, or {@link NoTenantError} when there's no tenant. */
