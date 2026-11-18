@@ -29,7 +29,7 @@
         <mat-form-field class="template-body">
           <mat-label>{{ (t.tenant ? "Your template" : "The application's template (edit to make it yours)") | translate }}</mat-label>
           <textarea matInput rows="14" spellcheck="false" [ngModel]="body()" (ngModelChange)="body.set($event); saved.set(false)"></textarea>
-          <mat-hint>Scriban: &#123;&#123; data.field &#125;&#125;. {{ "A first line Subject: (email) or Title: (inbox, chat, push) sets the heading." | translate }}</mat-hint>
+          <mat-hint>Scriban: <code ngNonBindable>{{ data.field }}</code>. {{ "A first line Subject: (email) or Title: (inbox, chat, push) sets the heading." | translate }}</mat-hint>
         </mat-form-field>
         <mat-form-field class="template-data">
           <mat-label>{{ 'Sample data (JSON)' | translate }}</mat-label>
