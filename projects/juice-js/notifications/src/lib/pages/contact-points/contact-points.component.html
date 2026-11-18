@@ -1,6 +1,6 @@
 <section class="juice-notification-settings">
-  <h2>{{ 'Email addresses' | translate }}</h2>
-  <p>{{ 'Notifications are emailed only to addresses you have verified.' | translate }}</p>
+  <h2>{{ (phoneNumbers ? 'Email addresses and phone numbers' : 'Email addresses') | translate }}</h2>
+  <p>{{ 'Notifications are sent only to addresses you have verified.' | translate }}</p>
 
   @if (error()) { <p class="error" role="alert">{{ error()! | translate }}</p> }
 
@@ -43,6 +43,16 @@
     </mat-form-field>
     <button mat-flat-button type="submit" [disabled]="busy() || !address().trim()">{{ 'Add' | translate }}</button>
   </form>
+  @if (phoneNumbers) {
+    <form class="contact-point-add" (ngSubmit)="add('sms')">
+      <mat-form-field>
+        <mat-label>{{ 'Add a phone number for SMS' | translate }}</mat-label>
+        <input matInput type="tel" name="phone" autocomplete="tel" placeholder="+84 90 123 4567" [ngModel]="phone()" (ngModelChange)="phone.set($event)" required>
+        <mat-hint>{{ 'With the country code, starting with +' | translate }}</mat-hint>
+      </mat-form-field>
+      <button mat-flat-button type="submit" [disabled]="busy() || !phone().trim()">{{ 'Add' | translate }}</button>
+    </form>
+  }
 </section>
 
 @if (linkChannels.length > 0) {

@@ -23,6 +23,8 @@ export interface NotificationsConfig {
    * none (email only).
    */
   linkChannels?: string[];
+  /** Whether people may add phone numbers for SMS (the tenant sends SMS). Left out: email only. */
+  phoneNumbers?: boolean;
   /** The Telegram bot's username, without `@`: the link code then opens the bot with it (`https://t.me/{bot}?start={code}`). */
   telegramBot?: string;
 }
