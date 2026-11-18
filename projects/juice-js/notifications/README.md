@@ -50,7 +50,26 @@ Standalone apps use `provideNotifications({ apiUrl })` and put `<juice-notificat
 ```
 
 `…/notifications/preferences` (a mode per category and channel, and quiet hours) and `…/notifications/contact-points` (add an email address,
-receive a code, verify it).
+or a phone number with `phoneNumbers`, receive a code, verify it; link chat accounts with `linkChannels`).
+
+## Web Push
+
+Copy the service worker to the app's root (`angular.json`, the build's `assets`):
+
+```json
+{ "glob": "juice-push-sw.js", "input": "node_modules/@juice-js/notifications/assets", "output": "/" }
+```
+
+Then, once the person is signed in and has asked for notifications (a button; browsers refuse a prompt nobody asked for):
+
+```ts
+const device = await enableWebPush(api, { vapidPublicKey: environment.vapidPublicKey });
+// on sign-out
+await disableWebPush(api, device.id);
+```
+
+`vapidPublicKey` is the tenant's `webpush` integration's public key. Types with a `push` template then reach this browser; clicking the
+notification opens its link.
 
 ## What it shows
 
@@ -70,6 +89,9 @@ Item actions are listed from phase 2 and become buttons when Juice.Notifications
 | `tenantId` | the token's `platform_tenant` | A GUID, or a function returning one |
 | `accessToken` | `OAuthService.getAccessToken()` | For the hub |
 | `pageSize` | 20 | Items per page in the panel (≤ 100) |
+| `linkChannels` | none | Chat accounts people may link: `['slack', 'telegram']` |
+| `telegramBot` | | The Telegram bot's username, for the link that opens it with the code |
+| `phoneNumbers` | false | People may add phone numbers for SMS |
 
 ## Try it locally
 
