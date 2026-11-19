@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, ViewEncapsulation, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +27,13 @@ import { InboxPanelComponent } from '../inbox-panel/inbox-panel.component';
       <juice-inbox-panel [followLinks]="followLinks()"></juice-inbox-panel>
     </mat-menu>
   `,
+  // The menu's panel is drawn in an overlay, outside this component, so its style can't be scoped here. Material caps a menu panel at
+  // 280px (and pads its content), which cut the inbox panel (420px) on the right: its toggle, the last tabs, mark-all-as-read.
+  styles: `
+    .mat-mdc-menu-panel.juice-inbox-menu { max-width: none; }
+    .mat-mdc-menu-panel.juice-inbox-menu .mat-mdc-menu-content { padding: 0; }
+  `,
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationBellComponent implements OnInit {
