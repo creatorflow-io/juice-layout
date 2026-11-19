@@ -33,6 +33,11 @@
     }
 }
 
+// A folded menu's counts sit on the icon's corner, placed from the row.
+:host ::ng-deep .mat-mdc-list-item{
+    position: relative;
+}
+
 // With labels shown, a group's pages sit one step in from its header.
 :host.menu-expanded ::ng-deep .mat-expansion-panel-body .mat-mdc-list-item{
     padding-left: 32px;

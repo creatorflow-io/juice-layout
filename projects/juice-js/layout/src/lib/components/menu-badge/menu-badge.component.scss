@@ -1,0 +1,31 @@
+:host {
+    display: inline-block;
+    min-width: 1.25rem;
+    margin-left: .5rem;
+    padding: 0 .375rem;
+    box-sizing: border-box;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    text-align: center;
+    vertical-align: middle;
+    background: var(--mat-sys-error, #b3261e);
+    color: var(--mat-sys-on-error, #fff);
+}
+
+:host([hidden]) {
+    display: none;
+}
+
+// Folded to icons: small, on the top right corner of the entry's icon (24px, 16px in from the row's start, centred
+// vertically), inside the row, which clips.
+:host(.folded) {
+    position: absolute;
+    left: 30px;
+    top: calc(50% - 18px);
+    margin: 0;
+    transform: scale(.75);
+    transform-origin: top left;
+    pointer-events: none;
+}

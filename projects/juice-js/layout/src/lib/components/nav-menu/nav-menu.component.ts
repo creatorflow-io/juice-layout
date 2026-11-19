@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MenuItem, MenuService, TenantService } from '@juice-js/core';
 import { LayoutService } from '../../layout.service';
 import { TooltipPosition } from '../tooltip/tooltip.directive';
 import { ActivatedRoute } from '@angular/router';
 import { PageSwitcherService } from '../../services/page-switcher.service';
+import { MenuBadgeService } from '../../services/menu-badge.service';
 
 @Component({
     selector: 'juice-nav-menu',
@@ -22,6 +23,8 @@ export class NavMenuComponent {
   TooltipPosition: typeof TooltipPosition = TooltipPosition;
 
   settingUrl: string|null|undefined;
+  /** The counts on the entries ({@link MenuBadgeService}). */
+  protected readonly badges = inject(MenuBadgeService);
 
   constructor(private service: MenuService, 
     public layout: LayoutService, private tenantService: TenantService,

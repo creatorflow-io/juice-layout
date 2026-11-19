@@ -5,7 +5,10 @@
         routerLink="{{ item.routerLink }}" [routerLinkActive]="['active']"
         [routerLinkActiveOptions]="{exact:true}">
         <mat-icon matListItemIcon color="accent">{{ item.icon }}</mat-icon>
-        <span matListItemTitle  style="margin-left: 4px;"> {{ item.label }}</span>
+        <span matListItemTitle  style="margin-left: 4px;"> {{ item.label }}@if (isExpanded) {<juice-menu-badge [badge]="badges.get(item.id)" [menuId]="item.id"></juice-menu-badge>}</span>
+        @if (!isExpanded) {
+          <juice-menu-badge [badge]="badges.get(item.id)" [folded]="true" [menuId]="item.id"></juice-menu-badge>
+        }
       </mat-list-item>
     } @else {
       <juice-expandable-menu

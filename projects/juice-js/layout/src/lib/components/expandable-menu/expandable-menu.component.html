@@ -1,9 +1,12 @@
-<mat-expansion-panel [expanded]="open" [hideToggle]="!isExpanded" [class.active]="open">
+<mat-expansion-panel #panel [expanded]="open" [hideToggle]="!isExpanded" [class.active]="open">
   <mat-expansion-panel-header>
     <mat-list-item [routerLink]="headerLink" [class.active]="headerActive">
       <mat-icon matListItemIcon color="accent">{{ item.icon }}</mat-icon>
+      <!-- Closed, the header carries its pages' counts: they are hidden with them. Open, they show beside their pages. -->
       @if (isExpanded) {
-        <span matListItemTitle style="margin-left: 4px;"> {{ item.label }}</span>
+        <span matListItemTitle style="margin-left: 4px;"> {{ item.label }}<juice-menu-badge [badge]="panel.expanded ? ownBadge() : closedBadge()" [menuId]="item.id"></juice-menu-badge></span>
+      } @else {
+        <juice-menu-badge [badge]="panel.expanded ? ownBadge() : closedBadge()" [folded]="true" [menuId]="item.id"></juice-menu-badge>
       }
     </mat-list-item>
   </mat-expansion-panel-header>
@@ -13,7 +16,9 @@
         [routerLinkActiveOptions]="{exact: true}">
         <mat-icon matListItemIcon color="accent">{{ subitem.icon }}</mat-icon>
         @if (isExpanded) {
-          <span matListItemTitle style="margin-left: 4px;"> {{ subitem.label }}</span>
+          <span matListItemTitle style="margin-left: 4px;"> {{ subitem.label }}<juice-menu-badge [badge]="badges.get(subitem.id)" [menuId]="subitem.id"></juice-menu-badge></span>
+        } @else {
+          <juice-menu-badge [badge]="badges.get(subitem.id)" [folded]="true" [menuId]="subitem.id"></juice-menu-badge>
         }
       </mat-list-item>
     }

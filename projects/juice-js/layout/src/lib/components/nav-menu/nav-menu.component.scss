@@ -8,6 +8,10 @@
         overflow-y: auto;
         overflow-x: hidden;
         flex: 1;
+        // A folded menu's counts sit on the icon's corner, placed from the row.
+        .mat-mdc-list-item{
+            position: relative;
+        }
         .mdc-list-item.mdc-list-item--with-one-line .mdc-list-item__start{
             margin-right: 10px;
         }

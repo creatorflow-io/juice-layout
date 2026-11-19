@@ -1,9 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef, inject, viewChild } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef, computed, inject, signal, viewChild } from '@angular/core';
 import { MenuItem } from '@juice-js/core';
 import { IsActiveMatchOptions, NavigationEnd, Router } from '@angular/router';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { filter } from 'rxjs/operators';
 import { TooltipPosition } from '../tooltip/tooltip.directive';
+import { MenuBadgeService } from '../../services/menu-badge.service';
 
 /** A page and the pages under it (`/alerts` and `/alerts/42`), whatever the query string. */
 const Section: IsActiveMatchOptions = { paths: 'subset', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' };
@@ -27,6 +28,13 @@ export class ExpandableMenuComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly panel = viewChild(MatExpansionPanel);
   private _item: MenuItem = {} as MenuItem;
+  protected readonly badges = inject(MenuBadgeService);
+  private readonly itemId = signal('');
+  private readonly childIds = signal<readonly string[]>([]);
+  /** The header's own count, shown while the group is open. */
+  protected readonly ownBadge = computed(() => this.badges.get(this.itemId()));
+  /** While the group is closed: its own count and its pages' together. */
+  protected readonly closedBadge = this.badges.total(computed(() => [this.itemId(), ...this.childIds()]));
 
   @Input()
   isExpanded = false;
@@ -35,6 +43,8 @@ export class ExpandableMenuComponent {
   set item(value: MenuItem) {
     this._item = value;
     this.children = value?.menuChildren?.() ?? [];
+    this.itemId.set(value?.id ?? '');
+    this.childIds.set(this.children.map(c => c.id));
     this.update();
   }
   get item(): MenuItem { return this._item; }

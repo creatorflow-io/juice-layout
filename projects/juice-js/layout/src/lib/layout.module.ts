@@ -24,6 +24,7 @@ import { PageNotfoundComponent } from './pages/page-notfound/page-notfound.compo
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { PageSwitcherComponent } from './components/page-switcher/page-switcher.component';
+import { MenuBadgeComponent } from './components/menu-badge/menu-badge.component';
 
 const routes: Routes = [ 
   
@@ -39,6 +40,7 @@ const routes: Routes = [
     SearchBarComponent,
     UserProfileComponent,
     PageSwitcherComponent,
+    MenuBadgeComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
