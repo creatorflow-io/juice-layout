@@ -42,51 +42,99 @@
 .inbox-items {
   flex: 1;
   overflow-y: auto;
-  margin: 0;
+  margin: 0 -12px;
   padding: 0;
   list-style: none;
 }
 
+// One item: the title and when on one line, the body under it, then its actions (or the outcome) on their own row. Read and archive sit in
+// the top right corner, shown when the item is hovered or focused (always on touch screens).
 .inbox-item {
+  --inbox-accent: transparent;
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 4px;
+  flex-direction: column;
   border-bottom: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+  border-left: 3px solid var(--inbox-accent);
+  transition: background-color 120ms;
 
-  &.unread .inbox-item-title {
-    font-weight: 600;
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface, #000) 4%, transparent);
   }
 
-  &.unread .inbox-item-open::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 14px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--mat-sys-primary, #3f51b5);
+  &.unread {
+    background: color-mix(in srgb, var(--mat-sys-primary, #3f51b5) 6%, transparent);
+
+    &:hover {
+      background: color-mix(in srgb, var(--mat-sys-primary, #3f51b5) 10%, transparent);
+    }
+
+    .inbox-item-title {
+      font-weight: 600;
+    }
+
+    .inbox-item-open::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 16px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--mat-sys-primary, #3f51b5);
+    }
   }
 
-  &.urgent .inbox-item-title {
-    color: var(--mat-sys-error, #b00020);
+  &.urgent {
+    --inbox-accent: var(--mat-sys-error, #b00020);
+  }
+
+  &:hover .inbox-item-tools,
+  &:focus-within .inbox-item-tools {
+    opacity: 1;
   }
 }
 
 .inbox-item-open {
   position: relative;
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
-  padding: 8px 4px 8px 16px;
+  padding: 10px 12px 10px 24px;
   border: 0;
   background: none;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #3f51b5);
+    outline-offset: -2px;
+  }
+}
+
+.inbox-item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-right: 64px; // the tools
+}
+
+.inbox-item-title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.925rem;
+  line-height: 1.3;
+}
+
+.inbox-item-time {
+  flex: none;
+  color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .inbox-item-body {
@@ -94,40 +142,83 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  opacity: 0.8;
-  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.7));
+  font-size: 0.85rem;
+  line-height: 1.35;
 }
 
 .inbox-item-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 12px 24px;
+}
+
+.inbox-item-action {
+  --mat-button-outlined-container-height: 32px;
+  height: 32px;
+  font-size: 0.85rem;
+}
+
+.inbox-item-chosen,
+.inbox-item-outcome {
+  display: inline-flex;
+  align-items: center;
   gap: 4px;
+  height: 28px;
+  padding: 0 10px 0 6px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
 }
 
-.inbox-item-actions {
-  padding: 0 4px 8px 16px;
-}
-
-.inbox-item-action.chosen {
-  font-weight: 600;
+.inbox-item-chosen {
+  background: var(--mat-sys-secondary-container, #e8eaf6);
+  color: var(--mat-sys-on-secondary-container, #1a237e);
 }
 
 .inbox-item-outcome {
-  font-size: 0.8rem;
-  font-style: italic;
-}
+  background: color-mix(in srgb, #2e7d32 14%, transparent);
+  color: color-mix(in srgb, #2e7d32 70%, var(--mat-sys-on-surface, #000));
 
-.inbox-item {
-  flex-wrap: wrap;
-}
-
-.inbox-item-time {
-  opacity: 0.6;
-  font-size: 0.75rem;
+  &.cancelled {
+    background: var(--mat-sys-surface-container-highest, rgba(0, 0, 0, 0.08));
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.7));
+  }
 }
 
 .inbox-item-tools {
+  position: absolute;
+  top: 4px;
+  right: 4px;
   display: flex;
+  opacity: 0;
+  transition: opacity 120ms;
+
+  button {
+    --mat-icon-button-state-layer-size: 32px;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+  }
+
+  mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+
+  @media (hover: none) {
+    opacity: 1;
+  }
 }
 
 .inbox-empty,

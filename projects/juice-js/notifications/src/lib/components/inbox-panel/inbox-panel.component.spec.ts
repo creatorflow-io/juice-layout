@@ -40,4 +40,37 @@ describe('InboxPanelComponent', () => {
     http.expectOne(`${ME}/inbox/counts`).flush(counts(0));
     http.verify();
   });
+
+  it('shows the person\'s choice as chosen, a closed correlation as its outcome, and times relative', async () => {
+    TestBed.configureTestingModule({
+      imports: [InboxPanelComponent],
+      providers: [...providers(new FakeHub(), jwt({ platform_tenant: TENANT })), provideNoopAnimations()],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    TestBed.inject(InboxService).start();
+    http.expectOne(`${ME}/inbox/counts`).flush(counts(0));
+    const actions = [{ id: 'approve', label: 'Approve' }, { id: 'reject', label: 'Reject' }];
+    http.expectOne((r) => r.url === `${ME}/inbox`).flush([
+      item('a', { actions, actionable: true, correlation: { state: 'open', outcome: null, acknowledgedBy: null, resolvedAt: null }, interactions: [{ kind: 'action', actionId: 'approve', at: 'x' }] }),
+      item('b', { actions, actionable: true, correlation: { state: 'resolved', outcome: 'Approved', acknowledgedBy: null, resolvedAt: 'x' } }),
+    ]);
+
+    const fixture = TestBed.createComponent(InboxPanelComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const rows = (fixture.nativeElement as HTMLElement).querySelectorAll('.inbox-item');
+
+    // Chosen: a mark, not a button; the other action can still be chosen.
+    expect(rows[0].querySelector('.inbox-item-chosen')!.textContent).toContain('Approve');
+    expect(Array.from(rows[0].querySelectorAll('.inbox-item-action')).map((b) => b.textContent!.trim())).toEqual(['Reject']);
+    // Closed: the outcome, no buttons.
+    expect(rows[1].querySelector('.inbox-item-outcome')!.textContent).toContain('Approved');
+    expect(rows[1].querySelector('.inbox-item-action')).toBeNull();
+
+    const ago = fixture.componentInstance.ago.bind(fixture.componentInstance);
+    const now = Date.parse('2026-11-20T10:00:00Z');
+    expect(ago('2026-11-20T09:59:30Z', now)).toBe(new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }).format(0, 'second'));
+    expect(ago('2026-11-20T09:55:00Z', now)).toMatch(/5/);
+    expect(ago('2026-11-19T08:00:00Z', now)).not.toBe('');
+  });
 });
