@@ -39,6 +39,23 @@ Standalone apps use `provideNotifications({ apiUrl })` and put `<juice-notificat
   otherwise; it isn't the app's tenant identifier in its URL.
 - **The API** must allow the app's origin: `Cors:Origins` in Juice.Notifications.
 
+## Colours
+
+The panel takes its colours from your app's theme; the library fixes none. Pass your Angular Material (M2) themes, light and dark, where you
+include the others:
+
+```scss
+@use '@juice-js/notifications' as notifications;
+
+:root { @include notifications.notifications-colors($light-theme); }
+.dark { @include notifications.notifications-colors($dark-theme); }   // your dark-mode selector (juice-layout's: .dark)
+```
+
+The accent (unread mark, counts, your choice) is from primary, urgent from warn, the rest from the theme's background and foreground. A
+theme has no "done" colour, so a closed request's outcome is Material's green unless you pass one: `notifications-colors($theme, (ok: #00897b))`.
+Each value is a `--juice-inbox-*` custom property you can also set directly. Without the mixin the panel uses Material 3's system colours
+(`--mat-sys-*`) if your app defines them, and neutral ones otherwise.
+
 ## Settings pages
 
 ```ts

@@ -6,6 +6,7 @@
 @use '@angular/material' as mat;
 @use 'sass:map';
 @use '../../../dist/juice-js/layout/styles/theming' as layout;
+@use '../../../dist/juice-js/notifications/styles/notifications' as notifications;
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -43,11 +44,14 @@ $dark-theme: mat.m2-define-dark-theme((
 
 @include mat.all-component-themes($light-theme);
 @include layout.layout-component-themes($light-theme);
+// The bell's inbox panel, in this theme's colours.
+:root { @include notifications.notifications-colors($light-theme); }
 
 .dark {
   // Define a dark theme
   @include mat.all-component-colors($dark-theme);
   @include layout.layout-component-colors($dark-theme);
+  @include notifications.notifications-colors($dark-theme);
 }
 
 .mat-primary {
