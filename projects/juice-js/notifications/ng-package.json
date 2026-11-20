@@ -5,6 +5,11 @@
     "entryFile": "src/public-api.ts"
   },
   "assets": [
-    "assets/juice-push-sw.js"
+    "assets/juice-push-sw.js",
+    {
+      "glob": "**/*.scss",
+      "input": "./styles",
+      "output": "./styles"
+    }
   ]
 }

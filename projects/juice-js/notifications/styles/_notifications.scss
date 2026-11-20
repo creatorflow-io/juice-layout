@@ -1,0 +1,53 @@
+// Colours for the bell's inbox panel, from the app's own Angular Material (M2) theme. The library fixes no hue: include it where the app
+// includes its other themes, and again under its dark-mode selector:
+//
+//   @use '@juice-js/notifications' as notifications;
+//   :root { @include notifications.notifications-colors($light-theme); }
+//   .dark { @include notifications.notifications-colors($dark-theme); }
+//
+// It writes the --juice-inbox-* custom properties the panel reads: accent (unread mark, counts, focus, your choice) from primary; urgent from
+// warn; text, muted, divider and hover from the background and foreground palettes. A theme has no slot for "done", so it is Material's green
+// unless $status passes (ok: <colour>). Without this mixin the panel uses Material 3's system colours (--mat-sys-*) when the app defines
+// them, and neutral ones otherwise.
+@use '@angular/material' as mat;
+@use 'sass:color';
+@use 'sass:map';
+
+@function _pick($is-dark, $light, $dark) {
+  @if $is-dark {
+    @return $dark;
+  }
+  @return $light;
+}
+
+@function _hue($palette, $light, $dark, $is-dark) {
+  @return mat.m2-get-color-from-palette($palette, _pick($is-dark, $light, $dark));
+}
+
+/// The --juice-inbox-* colour properties from an M2 theme.
+/// @param $theme  from mat.m2-define-light-theme or mat.m2-define-dark-theme
+/// @param $status optional overrides: (ok: <colour>) for a closed correlation's outcome
+@mixin notifications-colors($theme, $status: ()) {
+  $config: mat.m2-get-color-config($theme);
+  $is-dark: map.get($config, is-dark);
+  $background: map.get($config, background);
+  $foreground: map.get($config, foreground);
+  $primary: map.get($config, primary);
+  $surface: map.get($background, card);
+  $text: color.change(map.get($foreground, text), $alpha: 1);
+  $accent: _hue($primary, 500, 300, $is-dark);
+  $ok: map.get(map.merge((ok: _hue(mat.m2-define-palette(mat.$m2-green-palette), 800, 300, $is-dark)), $status), ok);
+
+  --juice-inbox-accent: #{$accent};
+  --juice-inbox-on-accent: #{_hue($primary, default-contrast, default-contrast, $is-dark)};
+  --juice-inbox-unread-bg: #{color.mix($accent, $surface, _pick($is-dark, 12%, 6%))};
+  --juice-inbox-hover-bg: #{color.mix($text, $surface, 4%)};
+  --juice-inbox-chosen: #{_hue($primary, 800, 200, $is-dark)};
+  --juice-inbox-chosen-bg: #{color.mix($accent, $surface, _pick($is-dark, 24%, 14%))};
+  --juice-inbox-ok: #{$ok};
+  --juice-inbox-ok-bg: #{color.mix($ok, $surface, _pick($is-dark, 22%, 14%))};
+  --juice-inbox-urgent: #{_hue(map.get($config, warn), 700, 300, $is-dark)};
+  --juice-inbox-muted: #{map.get($foreground, secondary-text)};
+  --juice-inbox-divider: #{map.get($foreground, divider)};
+  --juice-inbox-off-bg: #{color.mix($text, $surface, 8%)};
+}
