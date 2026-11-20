@@ -30,26 +30,35 @@
     @for (item of inbox.items(); track item.id) {
       <li class="inbox-item" [class.unread]="!item.readAt" [class.urgent]="item.priority === 'high' || item.priority === 'critical'">
         <button type="button" class="inbox-item-open" (click)="open(item)">
-          <span class="inbox-item-title">{{ item.title }}</span>
+          <span class="inbox-item-head">
+            <span class="inbox-item-title">{{ item.title }}</span>
+            <time class="inbox-item-time" [attr.datetime]="item.createdAt" [title]="item.createdAt | date: 'medium'">{{ ago(item.createdAt) }}</time>
+          </span>
           @if (item.body) { <span class="inbox-item-body">{{ item.body }}</span> }
-          @if (item.correlation?.state === 'resolved' || item.correlation?.state === 'cancelled') {
-            <span class="inbox-item-outcome">{{ item.correlation!.outcome || (item.correlation!.state === 'resolved' ? 'Done' : 'Cancelled') | translate }}</span>
-          }
-          <time class="inbox-item-time" [attr.datetime]="item.createdAt">{{ item.createdAt | date: 'short' }}</time>
         </button>
         @if (canAct(item)) {
           <span class="inbox-item-actions">
             @for (action of item.actions; track action.id) {
-              <button mat-stroked-button type="button" class="inbox-item-action" [class.chosen]="chosen(item) === action.id"
-                [disabled]="chosen(item) === action.id" (click)="act(item, action.id, $event)">{{ action.label }}</button>
+              @if (chosen(item) === action.id) {
+                <span class="inbox-item-chosen" [matTooltip]="'Your choice' | translate"><mat-icon>check</mat-icon>{{ action.label }}</span>
+              } @else {
+                <button mat-stroked-button type="button" class="inbox-item-action" (click)="act(item, action.id, $event)">{{ action.label }}</button>
+              }
             }
+          </span>
+        } @else if (item.correlation?.state === 'resolved' || item.correlation?.state === 'cancelled') {
+          <span class="inbox-item-actions">
+            <span class="inbox-item-outcome" [class.cancelled]="item.correlation!.state === 'cancelled'">
+              <mat-icon>{{ item.correlation!.state === 'resolved' ? 'check_circle' : 'block' }}</mat-icon>
+              {{ item.correlation!.outcome || (item.correlation!.state === 'resolved' ? 'Done' : 'Cancelled') | translate }}
+            </span>
           </span>
         }
         <span class="inbox-item-tools">
           <button mat-icon-button type="button" (click)="toggleRead(item, $event)"
             [matTooltip]="(item.readAt ? 'Mark as unread' : 'Mark as read') | translate"
             [attr.aria-label]="(item.readAt ? 'Mark as unread' : 'Mark as read') | translate">
-            <mat-icon>{{ item.readAt ? 'mark_email_unread' : 'mark_email_read' }}</mat-icon>
+            <mat-icon>{{ item.readAt ? 'mark_email_unread' : 'drafts' }}</mat-icon>
           </button>
           <button mat-icon-button type="button" (click)="archive(item, $event)" [matTooltip]="'Archive' | translate" [attr.aria-label]="'Archive' | translate">
             <mat-icon>archive</mat-icon>
