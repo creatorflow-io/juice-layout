@@ -36,7 +36,8 @@ Standalone apps use `provideNotifications({ apiUrl })` and put `<juice-notificat
 - **The token:** list the API in `AuthModuleConfig.allowedUrls`, so `@juice-js/auth`'s interceptor sends the token with REST calls. The hub
   takes it from `OAuthService` (or `accessToken` in the configuration).
 - **The tenant:** the API routes by the tenant's id (a GUID). It is the access token's `platform_tenant` claim unless `tenantId` says
-  otherwise; it isn't the app's tenant identifier in its URL.
+  otherwise; it isn't the app's tenant identifier in its URL. An app whose tenant resolver knows the Id can pass it:
+  `tenantId: () => tenantService.currentTenant?.id` (`TenantService` in `@juice-js/core`, `TenantInfo.id`).
 - **The API** must allow the app's origin: `Cors:Origins` in Juice.Notifications.
 
 ## Colours

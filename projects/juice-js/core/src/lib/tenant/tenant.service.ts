@@ -25,6 +25,14 @@ export class TenantService {
     ;
   }
 
+  /**
+   * The tenant's Id (a GUID) for the tenant in the URL, to call Juice services with; undefined when the resolver doesn't know it. A service
+   * takes the Id, never the name in the URL (the tenant pattern, juice-docs decision record).
+   */
+  async getTenantId(): Promise<string | undefined>{
+    return (await this.getTenantInfo())?.id || undefined;
+  }
+
   private async getTenantByIdentifier(identifier: string): Promise<TenantInfo|null>{
       if(!this.resolvers){
         return null;
