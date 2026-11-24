@@ -12,6 +12,8 @@ import { TranslatePipe, TranslateDirective, provideTranslateService } from '@ngx
 import { PageComponent } from './page.component';
 import { SearchBarComponent } from '../components/search-bar/search-bar.component';
 import { DarkModeComponent } from '../components/dark-mode/dark-mode.component';
+import { PaletteSwitchComponent } from '../components/palette-switch/palette-switch.component';
+import { MatMenuModule } from '@angular/material/menu';
 import { UserProfileComponent } from '../components/user-profile/user-profile.component';
 import { NavMenuComponent } from '../components/nav-menu/nav-menu.component';
 import { PageSwitcherComponent } from '../components/page-switcher/page-switcher.component';
@@ -31,12 +33,14 @@ describe('PageComponent', () => {
     declarations: [
         SearchBarComponent,
         DarkModeComponent,
+        PaletteSwitchComponent,
         UserProfileComponent,
         NavMenuComponent,
         PageSwitcherComponent,
         PageComponent
     ],
     imports: [MatToolbarModule,
+        MatMenuModule,
         MatSidenavModule,
         MatIconModule,
         MatListModule,

@@ -1,5 +1,126 @@
+// juice-layout's styles. Material 3 apps include theme() once: Material, the layout's own components, the palettes
+// the viewer can switch between (LayoutService.setPalette), and the shared --juice-* tokens that the Juice pages
+// (audit, observability, notifications…) read, so the whole app follows one palette, light and dark.
+//
+//   @use '@juice-js/layout' as layout;
+//   @include layout.theme();                                    // teal (default) and indigo
+//   @include layout.theme((default: indigo, density: -1));
+//   @include layout.theme((palettes: (brand: $my-m3-palettes)));  // more palettes, beside the built-in ones
+//
+// layout-component-themes() and layout-component-colors() are the Material 2 mixins of 1.x, kept for apps that have
+// not moved to Material 3 yet; they get no palettes and no --juice-* tokens.
+@forward 'palettes' show $teal, $indigo;
+@use 'palettes';
 @use '@angular/material' as mat;
 @use 'sass:map';
+@use 'sass:meta';
+
+// ─── Material 3 ───
+
+/// The built-in palettes, by the name data-juice-palette and LayoutConfig.palettes use.
+$palettes: ('teal': palettes.$teal, 'indigo': palettes.$indigo);
+
+/// Material 3 theme, layout components and palettes.
+/// @param $options
+///   default:    the palette before the viewer picks one ('teal')
+///   palettes:   more palettes, name → (primary: <M3 palette>, tertiary: <M3 palette>), e.g. from
+///               'ng generate @angular/material:theme-color'; a built-in name replaces that palette
+///   typography: mat.theme typography (Roboto)
+///   density:    mat.theme density, 0 to -5 (0)
+@mixin theme($options: ()) {
+  $o: map.merge((default: 'teal', palettes: (), typography: Roboto, density: 0), $options);
+  $all: map.merge($palettes, map.get($o, palettes));
+  $default: '' + map.get($o, default);
+  @if not map.has-key($all, $default) {
+    @error "Unknown juice-layout palette '#{$default}': use one of #{map.keys($all)}.";
+  }
+
+  html {
+    color-scheme: light;
+    @include mat.theme((
+      color: _color(map.get($all, $default)),
+      typography: map.get($o, typography),
+      density: map.get($o, density),
+    ));
+    @include tokens();
+  }
+  // LayoutService (the dark mode switch) puts .dark on body; the theme's colours are light-dark() pairs.
+  .dark { color-scheme: dark; }
+  @each $name, $palette in $all {
+    [data-juice-palette='#{$name}'] {
+      @include mat.theme((color: _color($palette)));
+      @include tokens();
+    }
+  }
+  body {
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+  }
+  @include components();
+}
+
+@function _color($palette) {
+  @return (primary: map.get($palette, primary), tertiary: map.get($palette, tertiary), theme-type: color-scheme);
+}
+
+/// The shared tokens of the Juice pages, from Material 3's system colours: include it where those are defined.
+/// Status tones have no M3 role except error, so ok, warn and info are fixed light/dark pairs.
+@mixin tokens() {
+  --juice-bg: var(--mat-sys-surface);
+  --juice-surface: light-dark(var(--mat-sys-surface-container-lowest), var(--mat-sys-surface-container));
+  --juice-border: var(--mat-sys-surface-container-highest);
+  --juice-text: var(--mat-sys-on-surface);
+  --juice-muted: var(--mat-sys-on-surface-variant);
+  --juice-accent: var(--mat-sys-primary);
+  --juice-on-accent: var(--mat-sys-on-primary);
+  --juice-select: #{_tint(var(--juice-accent))};
+  --juice-ok: light-dark(#047857, #34d399);
+  --juice-warn: light-dark(#b45309, #fbbf24);
+  --juice-bad: var(--mat-sys-error);
+  --juice-info: light-dark(#0369a1, #38bdf8);
+  --juice-none: var(--juice-muted);
+  @each $tone in (ok, warn, bad, info, none) {
+    --juice-#{$tone}-bg: #{_tint(var(--juice-#{$tone}))};
+  }
+}
+
+// A tone on the surface: 14% in light, 22% in dark.
+@function _tint($color) {
+  @return light-dark(color-mix(in srgb, #{$color} 14%, var(--juice-surface)),
+    color-mix(in srgb, #{$color} 22%, var(--juice-surface)));
+}
+
+/// The layout's components in Material 3's system colours (theme() includes it).
+@mixin components() {
+  html { scroll-behavior: smooth; }
+  html, body, app-root, app-page, app-page > .container { height: 100%; margin: 0; display: block; }
+  .p-4 { padding: 1rem !important; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--mat-sys-outline-variant); border-radius: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  .mat-sidenav {
+    .mat-expansion-panel-body .mat-mdc-list-item-title { font-size: 0.9rem; }
+    @include mat.list-density(-2);
+    .mdc-list-item--with-leading-icon {
+      .mdc-list-item__start { color: var(--mat-sys-on-surface-variant); }
+      &:hover {
+        .mdc-list-item__start, .mdc-list-item__primary-text { color: var(--mat-sys-primary); }
+      }
+      &.active {
+        background-color: var(--mat-sys-secondary-container);
+        .mdc-list-item__start, .mdc-list-item__primary-text { color: var(--mat-sys-on-secondary-container); }
+      }
+    }
+  }
+
+  // Material only colours .mat-mdc-menu-item; other content in a panel (headers, notification items) inherits from
+  // the overlay container.
+  .mat-mdc-menu-panel { color: var(--mat-sys-on-surface); }
+}
+
+// ─── Material 2 (1.x) ───
 
 
 @mixin layout-component-themes($theme) {

@@ -13,10 +13,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { ILayoutConfig, IS_PRODUCTION, LayoutConfig } from './layout.config';
 import { LayoutService } from './layout.service';
 import { DarkModeComponent } from './components/dark-mode/dark-mode.component';
+import { PaletteSwitchComponent } from './components/palette-switch/palette-switch.component';
 import { PageComponent } from './page/page.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { ExpandableMenuComponent } from './components/expandable-menu/expandable-menu.component';
@@ -34,6 +36,7 @@ const routes: Routes = [
   declarations: [
     PageComponent,
     DarkModeComponent,
+    PaletteSwitchComponent,
     NavMenuComponent,
     ExpandableMenuComponent,
     PageNotfoundComponent,
@@ -56,7 +59,8 @@ const routes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   exports: [
     PageComponent,

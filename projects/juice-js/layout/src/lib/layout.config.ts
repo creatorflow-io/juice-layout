@@ -14,6 +14,8 @@ export class LayoutConfig{
     settingUrl: string | undefined;
     userImageUrl: string | undefined;
     pageSwitcher: boolean = true;
+    palettes: LayoutPalette[] = [...LAYOUT_PALETTES];
+    defaultPalette: string | undefined;
 
     constructor(options?: ILayoutConfig){
         if(options){
@@ -36,7 +38,33 @@ export interface ILayoutConfig{
      * Default true.
      */
     pageSwitcher?: boolean;
+    /**
+     * The colour palettes the viewer can switch between (the palette button beside the dark mode switch), by the names
+     * the stylesheet's `layout.theme()` emits. Default: teal and indigo. With one palette, no button.
+     */
+    palettes?: LayoutPalette[];
+    /**
+     * The palette before the viewer picks one. Without it, the stylesheet's `default` applies (teal unless
+     * `layout.theme((default: …))` changed it).
+     */
+    defaultPalette?: string;
 }
+
+/** A colour palette, as `layout.theme()` names it and the palette menu shows it. */
+export interface LayoutPalette {
+    /** The palette's name in the stylesheet: `data-juice-palette="<id>"`. */
+    id: string;
+    /** Shown in the menu (translated). */
+    name: string;
+    /** The swatch in the menu, a CSS colour; usually the palette's primary. */
+    color: string;
+}
+
+/** The palettes `layout.theme()` ships. */
+export const LAYOUT_PALETTES: readonly LayoutPalette[] = [
+    { id: "teal", name: "Teal", color: "#0f766e" },
+    { id: "indigo", name: "Indigo", color: "#4f46e5" },
+];
 
 export const IS_PRODUCTION = new InjectionToken<boolean>('production');
 

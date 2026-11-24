@@ -1,0 +1,14 @@
+@if (palettes.length > 1) {
+  <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="{{ 'Colours' | translate }}" matTooltipPosition="left"
+    [attr.aria-label]="'Colours' | translate" data-testid="palette-switch">
+    <mat-icon>palette</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" xPosition="before">
+    @for (p of palettes; track p.id) {
+      <button mat-menu-item (click)="select(p.id)" role="menuitemradio" [attr.aria-checked]="p.id === current()">
+        <span class="swatch" [class.current]="p.id === current()" [style.background]="p.color"></span>
+        <span class="name" [class.current]="p.id === current()">{{ p.name | translate }}</span>
+      </button>
+    }
+  </mat-menu>
+}

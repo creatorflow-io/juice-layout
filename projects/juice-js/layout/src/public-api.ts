@@ -5,7 +5,8 @@
 export * from './lib/layout.service';
 export * from './lib/page/page.component';
 export * from './lib/layout.module';
-export { LAYOUT_TOOLBAR_ITEMS } from './lib/layout.config';
+export { LAYOUT_TOOLBAR_ITEMS, LAYOUT_PALETTES } from './lib/layout.config';
+export type { LayoutPalette } from './lib/layout.config';
 export * from './lib/components/nav-menu/nav-menu.component';
 export * from './lib/components/expandable-menu/expandable-menu.component';
 export * from './lib/pages/page-notfound/page-notfound.component';
