@@ -1,5 +1,6 @@
-// Colours come from the app (the notifications-colors mixin writes --juice-inbox-*: styles/_notifications.scss); else from Material 3's
-// system colours when the app has them; else neutral, from the text colour. The library fixes no hue.
+// Colours come from the app (the notifications-colors mixin writes --juice-inbox-*: styles/_notifications.scss); else from juice-layout's
+// layout.theme() (Material 3's system colours and the --juice-* tokens), so the panel follows the app's palette; else neutral, from the text
+// colour. The library fixes no hue.
 :host {
   display: block;
   --_accent: var(--juice-inbox-accent, var(--mat-sys-primary, currentColor));
@@ -8,8 +9,8 @@
   --_hover-bg: var(--juice-inbox-hover-bg, color-mix(in srgb, currentColor 4%, transparent));
   --_chosen: var(--juice-inbox-chosen, var(--mat-sys-on-secondary-container, currentColor));
   --_chosen-bg: var(--juice-inbox-chosen-bg, var(--mat-sys-secondary-container, color-mix(in srgb, currentColor 10%, transparent)));
-  --_ok: var(--juice-inbox-ok, currentColor);
-  --_ok-bg: var(--juice-inbox-ok-bg, color-mix(in srgb, currentColor 10%, transparent));
+  --_ok: var(--juice-inbox-ok, var(--juice-ok, currentColor));
+  --_ok-bg: var(--juice-inbox-ok-bg, var(--juice-ok-bg, color-mix(in srgb, currentColor 10%, transparent)));
   --_urgent: var(--juice-inbox-urgent, var(--mat-sys-error, currentColor));
   --_muted: var(--juice-inbox-muted, var(--mat-sys-on-surface-variant, color-mix(in srgb, currentColor 65%, transparent)));
   --_divider: var(--juice-inbox-divider, var(--mat-sys-outline-variant, color-mix(in srgb, currentColor 12%, transparent)));
